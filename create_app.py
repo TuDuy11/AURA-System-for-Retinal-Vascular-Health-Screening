@@ -6,6 +6,8 @@ from error_handler import register_error_handlers
 from infrastructure.databases import init_db
 from api import register_blueprints
 
+
+
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
@@ -17,9 +19,11 @@ def create_app():
     init_cors(app)                 # :contentReference[oaicite:3]{index=3}
     register_error_handlers(app)   # :contentReference[oaicite:4]{index=4}
 
-    # init DB (tái sử dụng databases của bạn)
+    # init DB (tái sử dụng databases )
     init_db(app)
-
+    
+    
+   
     # register routes mới (health/auth/... về sau)
     register_blueprints(app)
 
