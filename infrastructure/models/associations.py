@@ -15,9 +15,9 @@ role_permissions = Table(
     Column("permission_id", Integer, ForeignKey("permissions.id"), primary_key=True),
 )
 
-#campaign_requests = Table(
- #   "campaign_requests",
-  #  Base.metadata,
-  #  Column("campaign_id", Integer, ForeignKey("screening_campaigns.id"), primary_key=True),
-  #  Column("request_id", Integer, ForeignKey("analysis_requests.id"), primary_key=True),
-#)
+campaign_requests = Table(
+   "campaign_requests",
+    Base.metadata,
+    Column("campaign_id", Integer, ForeignKey("screening_campaigns.id"), primary_key=True),
+    Column("request_id", Integer, ForeignKey("analysis_requests.id"), primary_key=True),
+)
