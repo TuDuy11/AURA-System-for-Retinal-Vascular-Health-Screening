@@ -5,6 +5,9 @@ from cors import init_cors
 from error_handler import register_error_handlers
 from infrastructure.databases import init_db
 from api import register_blueprints
+import logging
+
+logging.basicConfig(level=logging.INFO)
 
 
 
