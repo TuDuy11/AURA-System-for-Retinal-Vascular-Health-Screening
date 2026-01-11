@@ -10,4 +10,4 @@ def setup_logging(): # create a funcion to setup logging
         ]
     )
 
-setup_logging() # gọi hàm setup_logging để thiết lập logging khi module được import
+setup_logging() # gọi hàm setup_logging để thiết lập logging khi module được import  

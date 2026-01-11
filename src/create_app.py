@@ -1,10 +1,10 @@
-from flask import Flask
+from flask import Flask, app
 
 from config import Config
 from cors import init_cors
 from error_handler import register_error_handlers
 from infrastructure.databases import init_db
-from api import register_blueprints
+from api.routes import register_routes
 import logging
 
 logging.basicConfig(level=logging.INFO)
@@ -28,6 +28,7 @@ def create_app():
     
    
     # register routes mới (health/auth/... về sau)
-    register_blueprints(app)
+    register_routes(app)
 
+    
     return app
