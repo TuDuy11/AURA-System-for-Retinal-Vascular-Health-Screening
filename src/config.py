@@ -2,6 +2,10 @@
 
 import os
 
+DB_PATH = os.getenv("DB_PATH", "aura.db")
+SQLALCHEMY_DATABASE_URI = f"sqlite:///{DB_PATH}"
+
+
 class Config:
     """Base configuration."""
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'a_default_secret_key'

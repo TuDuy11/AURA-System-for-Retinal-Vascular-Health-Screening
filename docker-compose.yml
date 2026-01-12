@@ -1,0 +1,16 @@
+version: "3.9"
+
+services:
+  api:
+    image: aura-backend
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: aura_api
+    ports:
+      - "9999:9999"
+    environment:
+      DB_PATH: /app/src/aura.db
+    volumes:
+      - ./src/aura.db:/app/src/aura.db
+    restart: unless-stopped
