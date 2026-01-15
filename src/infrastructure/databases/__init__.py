@@ -52,15 +52,18 @@ from infrastructure.models.retraining_job_model import RetrainingJobModel
 from infrastructure.models.feedback_model import FeedbackModel  
 from infrastructure.models.doctor_review_model import DoctorReviewModel 
 
+from flask_sqlalchemy import SQLAlchemy
 
-
-
+db = SQLAlchemy()
 
 
 def init_db(app=None):
      #  Import models/associations TRONG hàm để tránh circular import
     
-    import infrastructure.models  
+    db.init_app(app)
 
-    
+    with app.app_context(): # kiểm tra bảng 
+           db.create_all()
+           print("oke")
+
     init_mssql(app)

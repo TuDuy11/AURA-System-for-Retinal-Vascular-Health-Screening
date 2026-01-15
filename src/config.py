@@ -2,75 +2,45 @@
 
 import os
 
-DB_PATH = os.getenv("DB_PATH", "aura.db")
-SQLALCHEMY_DATABASE_URI = f"sqlite:///{DB_PATH}"
-
-
 class Config:
     """Base configuration."""
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'a_default_secret_key'
     DEBUG = os.environ.get('DEBUG', 'False').lower() in ['true', '1']
     TESTING = os.environ.get('TESTING', 'False').lower() in ['true', '1']
-     # 👉 ĐỔI DÒNG NÀY
-    DATABASE_URI = os.environ.get('DATABASE_URI') or 'sqlite:///aura.db'
+    
+    # PostgreSQL Supabase connection - URL encode password
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URI') or 'postgresql://postgres:b9zRGHuG89M%2FcF5@db.wfndttxhcxjjndzarwoq.supabase.co:5432/postgres'
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
     CORS_HEADERS = 'Content-Type'
 
 class DevelopmentConfig(Config):
     """Development configuration."""
     DEBUG = True
-    DATABASE_URI = os.environ.get('DATABASE_URI') or 'mssql+pymssql://sa:Aa%40123456@127.0.0.1:1433/FlaskApiDB'
-
+    SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:b9zRGHuG89M%2FcF5@db.wfndttxhcxjjndzarwoq.supabase.co:5432/postgres'
 
 class TestingConfig(Config):
     """Testing configuration."""
     TESTING = True
-    DATABASE_URI = os.environ.get('DATABASE_URI') or 'mssql+pymssql://sa:Aa%40123456@127.0.0.1:1433/FlaskApiDB'
-
+    SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:b9zRGHuG89M%2FcF5@db.wfndttxhcxjjndzarwoq.supabase.co:5432/postgres'
 
 class ProductionConfig(Config):
     """Production configuration."""
-    DATABASE_URI = os.environ.get('DATABASE_URI') or 'mssql+pymssql://sa:Aa%40123456@127.0.0.1:1433/FlaskApiDB'
+    DEBUG = False
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URI') or 'postgresql://postgres:b9zRGHuG89M%2FcF5@db.wfndttxhcxjjndzarwoq.supabase.co:5432/postgres'
 
-    
-template = {
-    "swagger": "2.0",
-    "info": {
-        "title": "Todo API",
-        "description": "API for managing todos",
-        "version": "1.0.0"
-    },
-    "basePath": "/",
-    "schemes": [
-        "http",
-        "https"
-    ],
-    "consumes": [
-        "application/json"
-    ],
-    "produces": [
-        "application/json"
-    ]
-}
 class SwaggerConfig:
     """Swagger configuration."""
     template = {
         "swagger": "2.0",
         "info": {
-            "title": "Todo API",
-            "description": "API for managing todos",
+            "title": "AURA Retinal Vascular Health Screening API",
+            "description": "API for retinal vascular health screening system",
             "version": "1.0.0"
         },
         "basePath": "/",
-        "schemes": [
-            "http",
-            "https"
-        ],
-        "consumes": [
-            "application/json"
-        ],
-        "produces": [
-            "application/json"
-        ]
+        "schemes": ["http", "https"],
+        "consumes": ["application/json"],
+        "produces": ["application/json"]
     }
 
     swagger_config = {

@@ -3,7 +3,7 @@ from sqlalchemy.orm import sessionmaker
 from config import Config
 from infrastructure.databases.base import Base
 
-DATABASE_URI = Config.DATABASE_URI
+DATABASE_URI = Config.SQLALCHEMY_DATABASE_URI  
 
 engine = create_engine(DATABASE_URI)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
