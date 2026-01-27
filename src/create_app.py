@@ -1,29 +1,32 @@
-from flask import Flask, app
-
+from flask import Flask
 from config import Config
 from cors import init_cors
 from error_handler import register_error_handlers
-from infrastructure.databases import init_db
+from infrastructure.databases import init_db, db
 from api.routes import register_routes
 import logging
+import os
 
 logging.basicConfig(level=logging.INFO)
 
 
 
 def create_app():
-    app = Flask(__name__)
+    # fontend templates and static files configuration
+    app = Flask(__name__, 
+                template_folder=os.path.join(os.path.dirname(__file__), 'frontend', 'templates'),
+                static_folder=os.path.join(os.path.dirname(__file__), 'frontend', 'static'))
     app.config.from_object(Config)
 
-    # Logging: file app_logging.py của bạn hiện đang tự setup khi import
-    # (vì có setup_logging() được gọi ở cuối file). :contentReference[oaicite:2]{index=2}
-    import app_logging  # noqa: F401
+    
+   
+    import app_logging  
 
-    init_cors(app)                 # :contentReference[oaicite:3]{index=3}
-    register_error_handlers(app)   # :contentReference[oaicite:4]{index=4}
+    init_cors(app)                 
+    register_error_handlers(app)   
 
-    # init DB (tái sử dụng databases )
-    init_db(app)
+    # init DB (tái sử dụng databases ) -
+    # init_db(app)
     
     
    

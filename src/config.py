@@ -8,25 +8,25 @@ class Config:
     DEBUG = os.environ.get('DEBUG', 'False').lower() in ['true', '1']
     TESTING = os.environ.get('TESTING', 'False').lower() in ['true', '1']
     
-    # PostgreSQL Supabase connection - URL encode password
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URI') or 'postgresql://postgres:b9zRGHuG89M%2FcF5@db.wfndttxhcxjjndzarwoq.supabase.co:5432/postgres'
+    # PostgreSQL LOCAL (không phải Supabase)
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URI') or 'postgresql://postgres:b9zRGHuG89M/cF5@db.wfndttxhcxjjndzarwoq.supabase.co:5432/postgres'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     CORS_HEADERS = 'Content-Type'
 
 class DevelopmentConfig(Config):
     """Development configuration."""
     DEBUG = True
-    SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:b9zRGHuG89M%2FcF5@db.wfndttxhcxjjndzarwoq.supabase.co:5432/postgres'
+    SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:b9zRGHuG89M/cF5@db.wfndttxhcxjjndzarwoq.supabase.co:5432/postgres'
 
 class TestingConfig(Config):
     """Testing configuration."""
     TESTING = True
-    SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:b9zRGHuG89M%2FcF5@db.wfndttxhcxjjndzarwoq.supabase.co:5432/postgres'
+    SQLALCHEMY_DATABASE_URI ='postgresql://postgres:b9zRGHuG89M/cF5@db.wfndttxhcxjjndzarwoq.supabase.co:5432/postgres'
 
 class ProductionConfig(Config):
     """Production configuration."""
     DEBUG = False
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URI') or 'postgresql://postgres:b9zRGHuG89M%2FcF5@db.wfndttxhcxjjndzarwoq.supabase.co:5432/postgres'
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URI') or 'postgresql://postgres:b9zRGHuG89M/cF5@db.wfndttxhcxjjndzarwoq.supabase.co:5432/postgres'
 
 class SwaggerConfig:
     """Swagger configuration."""

@@ -64,6 +64,5 @@ def init_db(app=None):
 
     with app.app_context(): # kiểm tra bảng 
            db.create_all()
-           print("oke")
-
+                  
     init_mssql(app)

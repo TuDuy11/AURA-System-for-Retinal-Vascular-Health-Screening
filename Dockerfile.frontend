@@ -1,0 +1,13 @@
+FROM node:18-alpine
+
+WORKDIR /app/src/frontend
+
+COPY src/frontend/package*.json ./
+
+RUN npm ci --legacy-peer-deps
+
+COPY src/frontend .
+
+EXPOSE 5173
+
+CMD ["npm", "run", "dev"]

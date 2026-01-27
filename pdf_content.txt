@@ -1,0 +1,2858 @@
+
+--- PAGE 1 ---
+Dự Án Bài T ậ p Nhóm
+- Ho Chi Minh, January 2026 -
+Table of Contents
+Definition and Acronyms 
+I. Project Introduction
+1. Overview 
+2. Project Scope & Limitations
+II. Project Management Plan
+1. Overview 
+2. Management Approach
+3. Project Deliverables
+4. Project Communications
+5. Configuration Management
+III. Software Requirement Specification
+1. Product Overview
+2. User Requirements
+3. Functional Requirements
+IV. SoGware Design Description
+1. System Design
+2. Database Design 
+3. Detailed Design
+Definition and Acronyms Group Members 6 Members
+Supervisor Nguyễn Vă n Chi ế n
+Project code SP26SE025
+OCT Optical Coherence Tomography
+UI User Interface
+ERD Entity Relationship DiagramAcronym Definition
+--- PAGE 2 ---
+I. Project Introduction
+1. Overview 
+1.1. Project Information
+Project name: System for Retinal Vascular Health Screening
+Project code: SP26SE025
+Group name: Nh ữ ng k ẻ  q ỷ  di ệ t ph ầ n m ề m
+Software Type: Web application
+1.2. Project Team
+2. Project Scope & Limitations
+2.1 Functional requirement
+2.1.1 User Functional Requirements:
+[FR-1] Register and log in using email, Google account, or social authentication.
+[FR-2] Upload single or multiple retinal (Fundus or OCT) images for analysis.
+[FR-3] View AI-generated diagnostic results and risk levels.
+[FR-4] Visualize annotated images showing affected vascular areas.
+[FR-5] Receive automated health recommendations or warnings.
+[FR-6] Access personal analysis history and previous reports.
+[FR-7] Download or export diagnostic reports (PDF/CSV).
+[FR-8] Manage and update personal profile and medical information.
+[FR-9] Receive notifications when AI results are ready.Nguyễn Chánh
+Tư DuyLeaderduynct2848@ut.edu.vn0393209011
+Đặng Ngọ c Thùy
+DungMemberdungdnt5262@ut.edu.v
+n0703694965
+Đào Mạnh Qu ố c
+BảoMemberbaodmq9047@ut.edu.v
+n0902915611
+Bùi Thái Duy AnhMemberanhbtd5057@ut.edu.vn0326623801
+Trần Văn Đ ứ cMemberductv7116@ut.edu.vn0799408428
+Vũ Vĩnh NìnhMemberninhvv2925@ut.edu.vn0869327289Full name RoleEmail Mobile
+--- PAGE 3 ---
+[FR-10] Communicate with the assigned doctor via in-app messaging.
+[FR-11] Purchase or renew analysis service packages.
+[FR-12] View payment history and remaining analysis credits.
+2.1.2 Doctor Functional Requirements:
+[FR-13] Log in and manage assigned patient profiles.
+[FR-14] Review AI analysis results and annotations.
+[FR-15] Validate or correct AI-generated findings.
+[FR-16] Add medical notes, diagnoses, or recommendations.
+[FR-17] Access patient history, previous analyses, and trend data.
+[FR-18] Filter or search patients by ID, name, or risk level.
+[FR-19] Provide feedback to improve AI accuracy and model retraining.
+[FR-20] Communicate with users (patients) through consultation chat.
+[FR-21] View performance summaries or analysis statistics.
+2.1.3 Clinic Functional Requirements:
+[FR-22] Register clinic accounts and verify organization identity.
+[FR-23] Manage multiple doctor and user (patient) accounts.
+[FR-24] Upload and submit bulk retinal images for AI analysis.
+[FR-25] Monitor all patient analysis reports and aggregated risk data.
+[FR-26] Generate clinic-wide reports for screening campaigns.
+[FR-27] Track number of images analyzed and package usage.
+[FR-28] Purchase or renew clinic-level service packages.
+[FR-29] Receive alerts for high-risk patients or abnormal trends.
+[FR30] Export summarized statistics for clinical research or management.
+2.1.4 Admin Functional Requirements:
+[FR-31] Manage user, doctor, and clinic accounts (enable, disable, edit).
+[FR-32] Define and update user roles and access permissions.
+[FR-33] Configure AI parameters, thresholds, and retraining policies.
+[FR-34] Manage service packages, pricing, and billing models.
+[FR-35] Access global dashboard showing usage, revenue, and AI performance.
+[FR-36] View system analytics (image count, risk distribution, error rates).
+[FR-37] Handle data compliance, audit logs, and privacy settings.
+[FR-38] Approve or suspend clinic registrations.
+[FR-39] Manage notification templates and communication policies.
+2.2 Non-functional requirement:
+--- PAGE 4 ---
+2.2.1 Performance Requirements:
+[NFR-1] AI analysis for a single retinal image must complete within 10–20 seconds, depending
+on image size and model load.
+[NFR-2] The system must support bulk processing ( ≥ 100 images per batch) with queued or
+parallel execution.
+[NFR-3] Dashboard and result retrieval should load in <3 seconds under normal network
+conditions.
+2.2.2 Reliability & Availability Requirements:
+[NFR-4] System uptime must be ≥  99% excluding scheduled maintenance.
+[NFR-5] AI Engine must fail gracefully; if analysis fails, the system returns a clear error and
+preserves all uploaded images.
+[NFR-6] Data must be backed up automatically at least once daily.
+2.2.3 Scalability Requirements:
+[NFR-7] The architecture must allow horizontal scaling of AI microservices to handle increased
+image volume.
+[NFR-8] Must support multiple clinics and thousands of users without performance degradation.
+2.2.4 Security & Privacy Requirements:
+[NFR-9] All patient data must be encrypted at rest and in transit (TLS 1.2+; AES-256).
+[NFR-10] The system must comply with medical data protection standards (HIPAA-like practices
+/ local health data laws).
+[NFR-11] Sensitive data must be anonymized before being used for AI model retraining.
+[NFR-12] Access must follow role-based access control (RBAC) for Admin, Clinic, Doctor, and
+User.
+2.2.5 Usability Requirements:
+[NFR-13] Web UI should be accessible and responsive across desktop, tablet, and mobile.
+[NFR-14] Clinicians must be able to upload images and view results with no more than 3 clicks.
+[NFR-15] Annotated images and risk explanations must be clear and clinically interpretable.
+2.2.6 Maintainability Requirements:
+[NFR-16] AI models, thresholds, and configurations must be updatable without system
+downtime.
+[NFR-17] Codebase must follow modular architecture:
++AI Core Microservice
++Web Application
++Admin/Clinic/Doctor modules
+--- PAGE 5 ---
++Database layer
+[NFR-18] Logging, auditing, and error tracking must be centralized.
+2.2.7 Interoperability Requirements:
+[NFR-19] Must support integration with common retinal fundus cameras (via cloud upload).
+[NFR-20] Export formats must include PDF, CSV, and standardized medical formats where
+possible.
+[NFR-21] AI engine must communicate over standard RESTful API endpoints.
+2.2.8 Data Quality & Explainability Requirements:
+[NFR-22] AI outputs must include explainable elements (heatmaps, annotated vessels,
+highlighted abnormalities).
+[NFR-23] System must track AI version and thresholds attached to each generated report to
+ensure traceability.
+II. Project Management Plan
+1. Overview 
+1.1 Scope & Estimation
+1 Initiating 7
+1.1Define project scope Medium 4
+1.2Collect requirements Medium 3
+2 Planning 6
+2.1Face to face meeting Medium 3
+2.2Create plan document Medium 3
+3 Executing
+3.1Analysis 6
+3.1.1Analysis requirements Medium 1
+3.1.2Feasibility Analysis Complex 5# WBS Item ComplexityEst.
+Effort
+(man-
+days)
+--- PAGE 6 ---
+1.2 Project Objectives
+Timelines: tr ư ớ c 23/1
+Allocated Effort (Man-days): 54
+Defect Distributions:3.2Design 15
+3.2.1Design use case Medium 2
+3.2.2Design conceptual ERD Medium 3
+3.2.3Design code architecture Medium 5
+3.2.4Design web application Medium 5
+3.3Implementation Medium 10
+3.4Testing 6
+3.4.1Unit test Complex 2
+3.4.2Integration Test Complex 2
+3.4.3System Test Complex 2
+3.5Monitoring and Controlling 4
+3.5.1Control the process Complex 2
+3.5.2Track performance a quality Complex 2
+54
+1ReviewingBackend:
+Code
+review (Python,
+Authentication)
+Frontend:
+Code<305%Focus on security,
+performance, and
+maintainability# Testing
+Stage  Test CoverageNo. of
+Defect
+s % of
+Defec
+t Notes
+--- PAGE 7 ---
+review (Next.js,
+React
+Components,
+State
+Management)
+2Unit TestBackend:
+Business logic
+Frontend:
+Component
+testing, Form
+validation<203%Ensure
+correctness of
+auth,
+UI interactions,
+and state
+management
+3Integratio
+n TestBackend: API
+integration
+Frontend: API
+calls, Data
+binding, UI
+responsiveness<51%Verify API
+interactions,
+state consistency,
+and UI
+behavior
+4System
+TestBackend: Full
+system testing
+with database
+(PostgreSQL,
+SQL server
+studio)
+Frontend: End
+to-end
+navigation,
+user
+experience<51%Ensure smooth
+UI-Backend
+communication
+and DB
+consistency
+--- PAGE 8 ---
+2. Management Approach
+2.1 Project Process
+After carefully evaluating different software development models, the project adopts an 
+Iterative and Incremental Software Development Process. This approach is well-suited for an
+AI-based medical screening system, where requirements are generally well-defined at a high
+level, but technical details and model performance improvements emerge progressively during
+development.
+In this model, an initial functional version of the system is developed and delivered early,
+providing a working foundation for both technical validation and stakeholder feedback. The
+system is then continuously enhanced through multiple iterations, with each iteration focusing
+on specific functional modules such as image upload, AI analysis, visualization, clinical
+validation, and reporting.
+The development process is divided into manageable phases, allowing the team to incorporate
+feedback from doctors and domain experts while progressively refining the AI model and
+system functionalities. The main reasons for choosing this model include:
+Developing core system features based on priority requirements, such as retinal image
+analysis and risk assessment.
+High flexibility to accommodate changes in medical guidelines, AI model parameters, and
+user feedback.
+Continuous testing and validation of both software components and AI outputs in each
+iteration.
+Early identification and mitigation of technical and clinical risks.
+Allowing clinicians and users to review early system outputs and provide feedback, reducing
+misunderstandings and late-stage issues.
+Delivering valuable and usable functionalities early, supporting early demonstrations and pilot
+testing.
+2.2 Quality Management5Acceptan
+ce TestFull workflow<51%Ensure system
+meets
+business
+requirements
+--- PAGE 9 ---
+To ensure reliability, safety, and clinical relevance, quality management is applied throughout all
+phases of system development, covering defect prevention, testing, review processes, and
+continuous improvement.
+2.2.1 Defect Prevention
+Whenever a defect or abnormal behavior is identified, the responsible team member must be
+notified immediately. Each defect is carefully evaluated by addressing the following questions:
+How critical is the defect to system functionality or patient safety?
+Can the defect affect diagnostic accuracy or system availability?
+How much effort and time are required to resolve the defect?
+Based on this assessment, a clear deadline for defect resolution is established. Preventive
+measures, such as code reviews, AI model validation, and data quality checks, are applied
+proactively to minimize the occurrence of critical issues during development.
+2.2.2 Reviewing
+All reviews are conducted impartially and without bias toward any team member. Code, system
+design documents, and AI outputs are reviewed regularly. When an issue is detected, the
+responsible individual is promptly informed.
+All identified defects and improvement suggestions are recorded in a centralized bug tracking
+system, including detailed descriptions, severity levels, and resolution status. This process
+ensures transparency and accountability throughout the project lifecycle.
+2.2.3 Unit Testing
+Unit testing focuses on verifying the correctness of individual system components, including
+API endpoints, AI processing modules, and data handling functions. Test cases are designed
+thoroughly to ensure that no relevant scenario is overlooked.
+Any defect discovered during unit testing must be logged in the bug tracking system, with clear
+priority and reproduction steps. The responsible developer must propose and implement an
+appropriate fix before the component is considered complete.
+2.2.4 Integration Testing
+Integration testing verifies that different system modules work seamlessly together, including
+interactions between the web application, AI core microservice, database, and cloud storage
+services.
+Test cases are prepared carefully to cover data flow scenarios such as image upload, AI
+inference requests, result storage, and report generation. All defects identified during integration
+--- PAGE 10 ---
+testing are documented with detailed information and prioritized for resolution to ensure system
+stability.
+2.2.5 System Testing
+System testing evaluates the complete system against the defined functional and non-functional
+requirements. Test cases are designed to validate system behavior under realistic usage
+scenarios, including multiple user roles such as Admin, Clinic, Doctor, and User.
+All defects detected during system testing are logged with appropriate severity levels. The
+responsible team member must resolve these issues promptly. Special attention is given to
+validating AI result accuracy, explainability, system performance, security, and data privacy. The
+goal is to ensure that all system functionalities operate correctly and safely before deployment
+or demonstration.
+2.3 Training Plan
+3. Project DeliverablesBackend All Team member14 days Mandatory
+FrontendBảo, Duy 14 days Mandatory
+Git, GitHubAll Team member14 days MandatoryTraining AreaParticipantsWhen, DurationWaiver Criteria
+1Sprint 1Dec 13, 2025 - Dec
+17, 2025-Project overview
+-Use Case design and flow
+-Identify entities, primary keys,
+secondary keys, and relationships
+-Plan for the following week
+2Sprint 2Dec 18, 2025 - Dec
+22, 2025-Design (System Design,
+Database Design) 
+-Meeting
+-Plan for the following week#Deliver
+ableDue Date Notes
+--- PAGE 11 ---
+4. Project Communications3Sprint 3Dec 29, 2025 - Dec
+29, 2025-Meeting and collaborative work
+on GitHub
+-Plan for the following week
+4Sprint 4Jan 03, 2026 - Jan
+22, 2026-Edit and finalize documentation
+-Meeting
+-Completed the SRS
+-Plan for the following week
+5Sprint 5Jan 10, 2026 - Feb
+4, 2026-Coding with GitHub
+Team weekly
+meetingAll
+team
+memb
+ersReview plan,
+schedule,
+members work
+achievements during
+the
+week and report the
+project progress and
+status09:00 am
+every MondayOfflineCommunica
+tion
+ItemWho/
+TargetPurpose When,
+FrequencyType,
+Tool,
+Method
+(s)
+--- PAGE 12 ---
+5. Configuration Management
+5.1 Document Management
+Document tools: Confluence
+File management and others: Google Drive
+5.2 Source Code Management
+Source code is managed by Git on 
+5.3 Tools & InfrastructuresUnschedule
+d
+meetingAll
+team
+memb
+ersWhen thereʼs a critical
+problem that needs to
+be
+resolved immediately,
+discuss then resolve
+that
+problemWhen
+members find
+important
+problemsGoogle
+Meet
+github.com
+TechnologyReact + TypeScript (Web Frontend), Python (FastAPI)
+for AI Core & Backend, Docker-based Microservices
+AI & Data
+ProcessingPython, TensorFlow, OpenCV, NumPy, Pandas
+Database PostgreSQL (clinical & system data), MongoDB (AI
+metadata, logs)
+Cloud & StorageSupabase (Auth & Database), Cloudinary (retinal image
+storage), VPS / Cloud Server
+IDEs / EditorsVisual Studio Code, PyCharm
+DiagrammingDraw.io, Visual Paradigm (UML 2.0: Use Case, Class,
+Sequence, Deployment)
+DocumentationMicrosoft Word, Google Docs, Google Sheets, Google
+SlidesCategory Tools / Infrastructure
+--- PAGE 13 ---
+III. Software Requirement Specification
+1. Product Overview
+AURA (AI-based Retinal Vascular Health Screening System) is a Clinical Decision Support
+(CDS) software solution that utilizes artificial intelligence to assist in the early screening of
+systemic health risks through retinal image analysis.
+The primary objective of AURA is to support early detection of diseases related to 
+cardiovascular conditions, diabetes, and stroke by analyzing retinal vascular characteristics.
+The system enhances clinical decision-making by providing risk assessments, visual
+explanations, and screening reports. AURA does not replace medical professionals and does 
+not deliver final medical diagnoses, but serves as a supportive tool for preventive healthcare.
+In terms of scope, AURA enables users and healthcare providers to upload Fundus or OCT
+retinal images, perform AI-driven vascular analysis, visualize annotated retinal images and
+risk levels, and generate screening reports with historical tracking. The system supports
+multiple user roles, including Patients, Doctors, Clinics, and Administrators, allowing both
+individual screening and large-scale clinical deployment.
+AURA is implemented as a cloud-based web application following a client–server architecture
+with a modular AI microservice communicating through RESTful APIs. The system is designed
+to be scalable, secure, and compatible with existing retinal imaging devices.
+The target users include patients undergoing retinal screening, doctors reviewing and
+validating AI-assisted results, clinics managing screening programs, and system
+administrators responsible for configuration and system operation. By leveraging AI-assisted
+retinal analysis, AURA expands access to preventive healthcare, reduces screening costs, and
+improves clinical efficiency.Version ControlGitHub (Source Code Management), GitHub Issues
+Deployment &
+DevOpsDocker, Docker Compose, Render / Vercel (Web), VPS
+(AI Services)
+Testing & QAPostman (API testing), PyTest, Manual Test Scenarios
+Project
+ManagementGoogle Sheets (task tracking), GitHub Projects
+--- PAGE 14 ---
+2. User Requirements
+2.1. Actors
+User (Patient)PrimaryAn end user who uploads retinal images,
+views AI analysis results, annotated images,
+health recommendations, manages personal
+profile and medical information, purchases
+service packages, views payment history,
+receives notifications, and communicates
+with doctors.
+Doctor PrimaryA medical professional responsible for
+managing assigned patients, reviewing
+patient history and trends, validating or
+correcting AI findings, adding medical notes
+and diagnoses, communicating with
+patients, viewing performance statistics, and
+providing feedback to improve AI accuracy.
+Clinic PrimaryA healthcare organization that registers and
+verifies clinic accounts, manages doctors
+and patients, performs bulk image uploads,
+monitors patient reports, tracks usage and
+credits, purchases clinic service packages,
+receives high-risk alerts, generates clinic
+reports, and exports summary statistics.
+Admin PrimaryA system administrator who manages user
+accounts, roles, and permissions; configures
+AI parameters; manages service packages
+and pricing; monitors the global dashboard;
+handles compliance and audit logs;
+approves or suspends clinic registrations;
+and manages system notifications.
+Authenticated
+UserSecondar
+y
+(GeneraliA generalized actor representing any
+logged-in user (Patient, Doctor, Clinic, or
+Admin) who can perform common actionsActor NameTypeDescription
+--- PAGE 15 ---
+2.2. Use Cases
+2.2.1. Diagram(s)
+2.2.2. Descriptions zed
+Actor)such as login, logout, change password, and
+receive system notifications.
+01Logi
+nAut
+hent
+icat
+ed
+Use
+rUsers
+login to
+the
+system
+using
+authentica
+tedIdUse
+Cas
+eAct
+orsUse Case
+Descripti
+on
+--- PAGE 16 ---
+credential
+s
+02Log
+outAut
+hent
+icat
+ed
+Use
+rUsers
+logout
+from the
+system
+03Vali
+date
+Cre
+dent
+ialsAut
+hent
+icat
+ed
+Use
+rSystem
+verifies
+user
+identity
+and
+authentica
+tion
+informatio
+n
+04Forg
+ot
+Pas
+swo
+rdAut
+hent
+icat
+ed
+Use
+rUsers
+request
+password
+recovery
+when they
+forget
+their
+password
+05Cha
+nge
+Pas
+swo
+rdAut
+hent
+icat
+ed
+Use
+rUsers can
+change
+their
+account
+password
+06Rec
+eive
+NotiAut
+hent
+icat
+edUsers
+receive
+system
+--- PAGE 17 ---
+ficat
+ionsUse
+rnotificatio
+ns
+07Man
+age
+Prof
+ile Use
+rUser
+views and
+updates
+personal
+and
+medical
+informatio
+n
+08Upl
+oad
+Reti
+nal
+Ima
+gesUse
+rUser
+uploads
+retinal
+images for
+AI
+analysis
+09AI
+Anal
+yze
+Ima
+geUse
+rSystem
+performs
+AI
+analysis
+on
+uploaded
+images
+10Vie
+w
+AI
+Anal
+ysis
+Res
+ultsUse
+rUser
+views AI
+diagnostic
+results
+and risk
+levels
+11Vie
+w
+Ann
+otat
+edUse
+rUser
+views
+annotated
+retinal
+images
+--- PAGE 18 ---
+Ima
+ges
+12Rec
+eive
+Hea
+lth
+Rec
+om
+men
+dati
+onsUse
+rUser
+receives
+automate
+d health
+recomme
+ndations
+13Vie
+w
+Anal
+ysis
+Hist
+oryUse
+rUser
+views
+previous
+analysis
+history
+14Dow
+nloa
+d
+Dia
+gno
+stic
+Rep
+ortUse
+rUser
+download
+s
+diagnostic
+report
+(PDF/CSV
+)
+15Cha
+t
+with
+Doc
+torUse
+rUser
+communic
+ates with
+assigned
+doctor
+16Vie
+w
+Pay
+men
+tUse
+rUser
+views
+payment
+history
+--- PAGE 19 ---
+Hist
+ory
+&
+Cre
+ditsand credit
+usage
+17Man
+age
+Pati
+ent
+Prof
+ilesDoc
+torDoctor
+manages
+assigned
+patient
+profiles
+18Sea
+rch
+/
+Filte
+r
+Pati
+entsDoc
+torDoctor
+searches
+and filters
+patient list
+19Vie
+w
+Anal
+ysis
+Perf
+orm
+anc
+e &
+Stati
+stic
+sDoc
+torDoctor
+views AI
+analysis
+performan
+ce and
+statistics
+20Revi
+ew
+AI
+Anal
+ysisDoc
+torDoctor
+reviews
+AI-
+generated
+analysis
+results
+--- PAGE 20 ---
+Res
+ults
+21Add
+Med
+ical
+Not
+es /
+Dia
+gno
+sis /
+Rec
+om
+men
+dati
+onsDoc
+torDoctor
+adds
+medical
+notes,
+diagnoses
+, or
+recomme
+ndations
+22Cha
+t
+with
+Pati
+entDoc
+torDoctor
+communic
+ates with
+patient
+23Vali
+date
+/
+Corr
+ect
+AI
+Find
+ingsDoc
+torDoctor
+validates
+or
+corrects
+AI
+diagnostic
+findings
+24Prov
+ide
+AI
+Fee
+dba
+ckDoc
+torDoctor
+provides
+feedback
+to improve
+AI system
+--- PAGE 21 ---
+25Vie
+w
+Agg
+rega
+ted
+Risk
+Das
+hbo
+ardClini
+cClinic
+views
+aggregate
+d patient
+risk
+dashboar
+d
+26Man
+age
+Doc
+tors
+/
+Pati
+entsClini
+cClinic
+manages
+doctors
+and
+patients
+27Upl
+oad
+Bulk
+Reti
+nal
+Ima
+gesClini
+cClinic
+uploads
+multiple
+retinal
+images at
+once
+28Sub
+mit
+Ima
+ges
+for
+AI
+Anal
+ysisClini
+cClinic
+submits
+uploaded
+images for
+AI
+analysis
+29Gen
+erat
+e
+CliniClini
+cClinic
+generates
+clinic-
+--- PAGE 22 ---
+c
+Rep
+ortslevel
+reports
+30Exp
+ort
+Su
+mm
+ary
+Stati
+stic
+sClini
+cClinic
+exports
+summary
+statistics
+31Trac
+k
+Ima
+ge
+Usa
+ge &
+Pac
+kag
+esClini
+cClinic
+tracks
+image
+usage and
+service
+packages
+32Pur
+cha
+se /
+Ren
+ew
+Ser
+vice
+Pac
+kag
+eClini
+cClinic
+purchases
+or renews
+service
+packages
+33Vie
+w
+Pati
+ent
+AnalClini
+cClinic
+views
+patient
+analysis
+reports
+--- PAGE 23 ---
+ysis
+Rep
+orts
+34Rec
+eive
+Hig
+h-
+risk
+Aler
+tsClini
+cClinic
+receives
+alerts for
+high-risk
+patients
+35Acc
+ount
+Man
+age
+men
+tAd
+minAdmin
+manages
+system
+accounts
+36Role
+s &
+Per
+mis
+sion
+sAd
+minAdmin
+manages
+roles and
+permissio
+ns
+37Con
+figu
+re
+AI
+Para
+met
+ersAd
+minAdmin
+configure
+s AI
+system
+parameter
+s
+38Man
+age
+Pac
+kag
+es &Ad
+minAdmin
+manages
+service
+packages
+and
+pricing
+--- PAGE 24 ---
+Prici
+ng
+39Vie
+w
+Glo
+bal
+Das
+hbo
+ardAd
+minAdmin
+views
+global
+system
+dashboar
+d
+40Man
+age
+Co
+mpli
+anc
+e &
+Aud
+it
+Log
+sAd
+minAdmin
+manages
+complianc
+e and
+audit logs
+41App
+rove
+/
+Sus
+pen
+d
+Clini
+csAd
+minAdmin
+approves
+or
+suspends
+clinic
+accounts
+42Man
+age
+Noti
+ficat
+ionsAd
+minAdmin
+manages
+system
+notificatio
+ns
+43Upd
+ate
+LiceAd
+minAdmin
+updates
+system
+--- PAGE 25 ---
+nsin
+g
+Info
+rma
+tionlicensing
+informatio
+n
+44Con
+figu
+re
+Risk
+Thr
+esh
+oldsAd
+minAdmin
+sets
+medical
+risk
+thresholds
+45Defi
+ne
+Prici
+ng
+Tabl
+esAd
+minAdmin
+defines
+pricing
+tables
+46Que
+ry
+Syst
+em
+Aud
+it
+Log
+sAd
+minAdmin
+queries
+and
+accesses
+audit logs
+47Con
+duct
+Leg
+al
+Prof
+ile
+Veri
+ficat
+ionAd
+minAdmin
+verifies
+clinic legal
+profiles
+--- PAGE 26 ---
+3. Functional Requirements
+3.1. System Functional Overview
+3.1.1. Screens Flow48Reje
+ct
+Regi
+strat
+ionAd
+minAdmin
+rejects
+clinic
+registratio
+n
+
+--- PAGE 27 ---
+3.1.2. Screen Descriptions
+#Feature Screen Screen Description
+--- PAGE 28 ---
+01 Login Login ScreenAllows users to enter
+credentials and access
+the system
+02 Logout Logout ScreenAllows users to securely
+log out from the system
+03Validate
+CredentialsAuthentication
+ScreenSystem verifies user
+identity and
+authentication
+information
+04Forgot PasswordForgot Password
+ScreenAllows users to request
+password recovery
+05Change
+PasswordChange Password
+ScreenEnables users to update
+their account password
+06Receive
+NotificationsNotification ScreenDisplays system
+notifications to users
+07Manage ProfileUser Profile ScreenAllows users to view and
+update personal and
+medical information
+08Upload Retinal
+ImagesImage Upload
+ScreenAllows users to upload
+retinal images for AI
+analysis
+09AI Analyze
+ImageAI Processing
+ScreenSystem processes
+uploaded images using
+AI
+10View AI Analysis
+ResultsAI Result ScreenDisplays AI diagnostic
+results and risk levels
+11View Annotated
+ImagesAnnotated Image
+ViewerShows retinal images
+with AI annotations
+12Receive Health
+Recommendatio
+nsRecommendation
+ScreenDisplays automated
+health recommendations
+--- PAGE 29 ---
+13View Analysis
+HistoryAnalysis History
+ScreenAllows users to view
+past analysis records
+14Download
+Diagnostic
+ReportReport Download
+ScreenEnables users to
+download diagnostic
+reports (PDF/CSV)
+15Chat with DoctorChat ScreenEnables communication
+between user and
+doctor
+16View Payment
+History & CreditsBilling Screen Displays payment
+history and credit usage
+17Manage Patient
+ProfilesPatient Management
+ScreenAllows doctors to
+manage assigned
+patient profiles
+18Search / Filter
+PatientsPatient List ScreenEnables doctors to
+search and filter patients
+19View Analysis
+Performance &
+StatisticsDoctor DashboardDisplays AI performance
+metrics and statistics
+20Review AI
+Analysis ResultsAI Review ScreenAllows doctors to review
+AI-generated results
+21Add Medical
+Notes /
+Diagnosis /
+Recommendatio
+nsMedical Notes
+ScreenAllows doctors to add
+medical notes and
+diagnoses
+22Chat with PatientDoctor-Patient Chat
+ScreenEnables communication
+between doctor and
+patient
+23Validate /
+Correct AI
+FindingsAI Validation ScreenAllows doctors to
+validate or correct AI
+findings
+--- PAGE 30 ---
+24Provide AI
+FeedbackAI Feedback ScreenAllows doctors to
+provide feedback to
+improve AI
+25 View
+Aggregated Risk
+DashboardClinic DashboardDisplays aggregated
+patient risk information
+26Manage Doctors
+/ PatientsClinic Management
+ScreenAllows clinics to manage
+doctors and patients
+27Upload Bulk
+Retinal ImagesBulk Upload ScreenAllows clinics to upload
+multiple retinal images
+28Submit Images
+for AI AnalysisAI Submission
+ScreenSubmits uploaded
+images for AI analysis
+29Generate Clinic
+ReportsClinic Report ScreenGenerates clinic-level
+analytical reports
+30Export Summary
+StatisticsExport Statistics
+ScreenExports summary
+statistics data
+31Track Image
+Usage &
+PackagesUsage Tracking
+ScreenTracks image usage and
+service packages
+32Purchase /
+Renew Service
+PackagePackage
+Management ScreenAllows clinics to
+purchase or renew
+service packages
+33View Patient
+Analysis ReportsPatient Report
+ScreenAllows clinics to view
+patient analysis reports
+34Receive High-
+risk AlertsAlert ScreenDisplays alerts for high-
+risk patients
+35Account
+ManagementAccount
+Management ScreenAllows admin to manage
+system accounts
+36Roles &
+PermissionsRole Management
+ScreenAllows admin to manage
+user roles and
+permissions
+--- PAGE 31 ---
+37Configure AI
+ParametersAI Configuration
+ScreenAllows admin to
+configure AI system
+parameters
+38Manage
+Packages &
+PricingPricing Management
+ScreenAllows admin to manage
+packages and pricing
+39View Global
+DashboardAdmin DashboardDisplays overall system
+status and metrics
+40Manage
+Compliance &
+Audit LogsAudit Log ScreenAllows admin to manage
+compliance and audit
+logs
+41Approve /
+Suspend ClinicsClinic Approval
+ScreenAllows admin to approve
+or suspend clinic
+accounts
+42Manage
+NotificationsNotification
+Management ScreenAllows admin to manage
+system notifications
+43 Update
+Licensing
+InformationLicensing ScreenAllows admin to update
+licensing information
+44Configure Risk
+ThresholdsRisk Configuration
+ScreenAllows admin to define
+medical risk thresholds
+45Define Pricing
+TablesPricing Table ScreenAllows admin to define
+pricing structures
+46Query System
+Audit LogsAudit Query ScreenAllows admin to query
+audit logs
+47Conduct Legal
+Profile
+VerificationLegal Verification
+ScreenAllows admin to verify
+clinic legal profiles
+48 Reject
+RegistrationRegistration Review
+ScreenAllows admin to reject
+clinic registration
+requests
+--- PAGE 32 ---
+3.1.3. Screen Authorization
+Login X XXX
+Logout X XXX
+Validate Credentials X XXX
+Forgot Password X XXX
+Change Password X XXX
+Receive Notifications X XXX
+Home / Dashboard X
+Manage Profile X
+Upload Retinal Images X
+AI Analyze Image X
+View AI Analysis Results X
+View Annotated Images X
+Health Recommendations X
+Analysis History X
+Download Diagnostic Report X
+Chat with Doctor X
+Doctor Dashboard X
+Manage Patient Profiles X
+Search/filter patients (ID/name/risk) X
+Review AI Analysis Results X
+Validate / Correct AI Findings X
+Add Medical Notes / Diagnosis XFunctional Requirement UserDoctorClinicAdmin
+--- PAGE 33 ---
+Provide AI Feedback X
+View Analysis Performance &
+StatisticsX
+Chat with Patient X
+Clinic Dashboard X
+Manage Doctors / Patients X
+Upload Bulk Retinal Images X
+Submit Images for AI Analysis X
+View Aggregated Risk Dashboard X
+Generate Clinic Reports X
+Export Summary Statistics X
+Track Image Usage & Packages X
+Purchase / Renew Service Package X
+View Patient Analysis Reports X
+Receive High-risk Alerts X
+Admin Dashboard X
+Account Management X
+Configure AI Parameters X
+Roles & Permissions X
+Configure Risk Thresholds X
+Manage Packages & Pricing X
+Define Pricing Tables X
+Manage Notifications X
+Manage Compliance & Audit Logs X
+Query System Audit Logs X
+--- PAGE 34 ---
+ 3.1.4 Non-screen functionsApprove / Suspend Clinics X
+Reject Registration X
+Update Licensing Information X
+View Global Dashboard X
+Conduct Legal Profile Verification X
+1Image Analysis
+SpeedPerformanceAI analysis for a single retinal
+image must complete within
+10–20 seconds, depending on
+image size and model load.
+2Bulk ProcessingPerformanceThe system must support bulk
+processing ( ≥ 100 images per
+batch) with queued or parallel
+execution.
+3Dashboard
+LatencyPerformanceDashboard and result retrieval
+should load in <3 seconds
+under normal network
+conditions.
+4System UptimeReliability &
+AvailabilitySystem uptime must be ≥
+99% excluding scheduled
+maintenance.
+5 AI Failure
+HandlingReliability &
+AvailabilityAI Engine must fail gracefully;
+if analysis fails, the system
+returns a clear error and
+preserves all uploaded
+images.#Feature / IDSystem
+Function
+(Category)Description
+--- PAGE 35 ---
+6Auto BackupReliability &
+AvailabilityData must be backed up
+automatically at least once
+daily.
+7Horizontal
+ScalingScalabilityThe architecture must allow
+horizontal scaling of AI
+microservices to handle
+increased image volume.
+8User ScalabilityScalabilityMust support multiple clinics
+and thousands of users
+without performance
+degradation.
+9Data EncryptionSecurity &
+PrivacyAll patient data must be
+encrypted at rest and in transit
+(TLS 1.2+; AES-256).
+10Standard
+ComplianceSecurity &
+PrivacyThe system must comply with
+medical data protection
+standards (HIPAA-like
+practices / local health data
+laws).
+11 Data
+AnonymizationSecurity &
+PrivacySensitive data must be
+anonymized before being
+used for AI model retraining.
+12Access Control
+(RBAC)Security &
+PrivacyAccess must follow role-
+based access control (RBAC)
+for Admin, Clinic, Doctor, and
+User.
+13Responsive UIUsability Web UI should be accessible
+and responsive across
+desktop, tablet, and mobile.
+14Minimal
+InteractionUsability Clinicians must be able to
+upload images and view
+results with no more than 3
+clicks.
+--- PAGE 36 ---
+3.1.5 Entity Relationship Diagram15 Clinical ClarityUsability Annotated images and risk
+explanations must be clear
+and clinically interpretable.
+16 Live UpdatesMaintainabilityAI models, thresholds, and
+configurations must be
+updatable without system
+downtime.
+17Modular
+ArchitectureMaintainabilityCodebase must follow
+modular architecture (AI Core,
+Web App, Modules, Database
+layer).
+18Centralized
+LoggingMaintainabilityLogging, auditing, and error
+tracking must be centralized.
+19 Camera
+IntegrationInteroperabilityMust support integration with
+common retinal fundus
+cameras (via cloud upload).
+20 Export FormatsInteroperabilityExport formats must include
+PDF, CSV, and standardized
+medical formats where
+possible.
+21 API StandardInteroperabilityAI engine must communicate
+over standard RESTful API
+endpoints.
+22 AI
+ExplainabilityData QualityAI outputs must include
+explainable elements
+(heatmaps, annotated vessels,
+highlighted abnormalities).
+23Version
+TraceabilityData QualitySystem must track AI version
+and thresholds attached to
+each generated report to
+ensure traceability.
+--- PAGE 37 ---
+IV. SoGware Design Description
+1. System Design
+1.1 System Architecture
+
+--- PAGE 38 ---
+1.1.1 Frontend
+Web Application (React + TypeScript):
+The web frontend is developed using React combined with TypeScript. React enables the
+creation of reusable UI components and efficient state management, while TypeScript
+provides strong type checking, improving code maintainability and reducing runtime errors.
+Mobile Application (Flutter – Optional):
+A mobile client can be optionally developed using Flutter to support cross-platform
+deployment on Android and iOS. This allows wider access for clinics and doctors while
+maintaining a consistent user experience.
+HTTPS Communication:
+All frontend applications communicate securely with the backend through HTTPS to ensure
+data confidentiality and integrity, especially for sensitive medical information.
+1.1.2 Backend 
+Backend Platform (Python + Docker):
+The backend system is implemented using Python and deployed in Docker containers.
+Docker enables consistent environments across development and production, simplifies
+deployment, and supports scalability.
+REST API Gateway:
+The REST API Gateway acts as the single entry point for frontend clients. It handles request
+routing, authentication, and communication with internal controllers.
+Controller Layer:
+This layer manages incoming HTTP requests and responses, including:
+Auth Controller
+User Controller
+Image Controller
+Controllers validate requests and forward them to the service layer.
+Service Layer:
+The service layer contains core business logic such as user management, report generation,
+notification handling, and retinal image processing. It also coordinates communication with AI
+services and external infrastructure components.
+Data Access Layer (Repository & Unit of Work):
+This layer abstracts database access using the Repository pattern and Unit of Work to ensure
+--- PAGE 39 ---
+transactional consistency and separation of concerns between business logic and data
+storage.
+1.1.3 Data Layer
+MongoDB:
+Used to store unstructured and semi-structured data such as AI analysis results and risk
+assessment outputs.
+PostgreSQL:
+A relational database used for structured data including user accounts, clinic information,
+payment records, and system metadata.
+1.1.4 AI Core Microservice
+Image Processing Module:
+Responsible for preprocessing retinal fundus images before analysis.
+Vessel Segmentation Model:
+Applies AI models to detect and segment retinal blood vessels, serving as the foundation for
+vascular analysis.
+Risk Prediction Model:
+Estimates risks related to cardiovascular diseases, diabetes complications, and stroke based
+on retinal vascular features.
+Explainability Engine:
+Generates interpretable outputs such as heatmaps and annotations, allowing clinicians to
+understand and validate AI predictions.
+1.1.5 Infrastructure & Third-party Services
+Kafka Event Queue:
+Supports asynchronous event processing, enabling scalable handling of notifications, logging,
+and background tasks.
+Auth / Google Login:
+Provides secure third-party authentication for users and clinicians.
+Email / Notification Service:
+Sends alerts, analysis results, and system notifications to users and clinics.
+Payment Gateway:
+Manages service package purchases, renewals, and payment transactions securely.
+1.2 Package Diagram
+1.2.1 Frontend 
+--- PAGE 40 ---
+1src/appActs as the application entry point and composition
+layer. Responsible for initializing the React
+application, registering global providers
+(authentication, state management), integrating
+layouts and routes, and bootstrapping the overall
+frontend architecture.
+2src/configsContains global configuration files such as
+environment variables, API base URLs, route
+constants, role definitions (User, Doctor, Clinic,
+Admin), and system-level settings used across the
+application.
+3src/typesDefines TypeScript interfaces, types, and
+enumerations used throughout the system,
+including domain models (User, Doctor, Clinic),
+retinal image metadata, AI analysis results, risk
+levels, reports, and API request/response contracts.
+4src/libProvides shared utility libraries and helper functions
+independent of UI components, such as Axios
+instances, token handling, date and numberNoPackageDescription
+--- PAGE 41 ---
+formatters, validation utilities, error handlers, and file
+export helpers (PDF/CSV).
+5src/servicesImplements the API communication layer of the
+frontend. This package encapsulates all interactions
+with backend and AI microservices, including
+authentication, retinal image upload, AI analysis
+submission and retrieval, report generation,
+messaging, billing, and administrative operations.
+6src/hooksContains custom React hooks that manage frontend
+business logic and application state. Hooks
+coordinate data fetching, call services, process AI
+results, handle user sessions, notifications, and
+expose reusable logic to UI components in a
+controlled and typed manner.
+7src/compon
+entsIncludes reusable and presentational UI
+components such as buttons, forms, modals, tables,
+upload widgets, result cards, and risk indicators.
+These components focus on rendering and user
+interaction without containing direct business logic.
+8src/layoutsDefines common page layouts for different user
+roles, including headers, sidebars, and footers.
+Examples include User Layout, Doctor Layout, Clinic
+Layout, and Admin Layout to ensure consistent UI
+structure across the system.
+9src/routesManages application routing configuration, including
+URL path definitions, route guards, role-based
+access control (RBAC), and mapping between
+routes and rendered pages
+10src/assetsStores static resources such as images, icons, fonts,
+and other non-changing interface assets used for
+branding and UI presentation.
+11src/visualiza
+tionHandles visualization of AI-generated outputs,
+including retinal image viewers, heatmaps, vessel
+annotations, risk charts, and trend analysis graphs
+--- PAGE 42 ---
+1.2.2 Backend to support clinical interpretation and decision-
+making.
+12src/features
+/authImplements authentication-related functionalities
+such as user registration, login, logout, password
+recovery, OAuth integration, and session
+management.
+13src/features
+/userContains user (patient) features, including retinal
+image upload, AI result viewing, annotated image
+visualization, analysis history, report export
+(PDF/CSV), profile and medical information
+management, and notification handling.
+14src/features
+/doctorSupports doctor functionalities such as managing
+assigned patients, reviewing AI analysis results,
+validating or correcting AI findings, adding medical
+notes and recommendations, and communicating
+with patients.
+15src/features
+/clinicManages clinic-level operations including bulk
+retinal image uploads, monitoring aggregated
+analysis results, managing doctors and patients,
+generating clinic-wide reports, and tracking service
+package usage.
+16src/features
+/adminProvides system administration capabilities such as
+managing users, doctors, and clinics, configuring
+roles and permissions, controlling service packages
+and pricing, monitoring system analytics, and
+enforcing compliance and audit policies.
+--- PAGE 43 ---
+api API LayerRequest
+handling,
+authenticatio
+n, routingExposes RESTful endpoints
+to web and mobile clients.
+Handles request validation,
+authentication/authorization
+(RBAC), and delegates
+processing to the
+Application Layer.
+api.auth API LayerAuthenticatio
+n endpointsProvides login, registration,
+OAuth, token refresh, and
+role-based access
+validation using Supabase
+Auth or equivalent identity
+providers.
+api.user API LayerUser-facing
+endpointsHandles user profile
+management, analysis
+history access, report
+retrieval, and notification
+delivery.
+api.doctorAPI LayerDoctor-
+facing
+endpointsEnables doctors to review
+AI results, validate findings,Package LayerResponsibili
+tiesDescription
+--- PAGE 44 ---
+add medical notes, and
+communicate with patients.
+api.clinic API LayerClinic
+management
+endpointsSupports clinic registration,
+bulk image upload, clinic-
+wide reports, and usage
+monitoring.
+api.adminAPI LayerSystem
+administratio
+n endpointsProvides administrative
+control over users, clinics,
+AI configurations, service
+packages, and system
+monitoring dashboards.
+api.image /
+api.analysis /
+api.reportAPI LayerAI-related
+endpointsManages image upload,
+analysis requests,
+explainability visualization
+access, and report export
+(PDF/CSV).
+api.payment /
+api.notificationAPI LayerBilling &
+messaging
+endpointsHandles service package
+purchase, payment history,
+credit tracking, and
+asynchronous notifications.
+applicationApplication
+LayerUse case
+orchestrationImplements core application
+workflows and business use
+cases, coordinating between
+API, Domain, AI Core, and
+Infrastructure layers.
+AuthServiceApplication
+LayerAuthenticatio
+n logicManages login flows, token
+validation, role enforcement,
+and access control policies.
+UserServiceApplication
+LayerUser lifecycle
+managementHandles user profiles,
+medical metadata, analysisPackageLayerResponsibilit
+iesDescription
+--- PAGE 45 ---
+history, and report access
+control.
+DoctorServic
+eApplication
+LayerClinical
+workflowsSupports doctor validation of
+AI results, medical
+annotations, feedback
+submission, and patient
+communication.
+ClinicServiceApplication
+LayerOrganizationa
+l workflowsManages clinic accounts,
+bulk submissions,
+aggregated reports, and
+screening campaigns.
+ImageServic
+eApplication
+LayerImage
+processing
+workflowCoordinates image upload,
+storage, preprocessing
+requests, and AI Core
+invocation.
+AnalysisServi
+ceApplication
+LayerAI
+orchestrationSends analysis jobs to the AI
+Core Microservice, tracks
+execution status, and
+persists results.
+ReportServic
+eApplication
+LayerReportingGenerates structured
+diagnostic reports, supports
+export formats, and attaches
+AI version metadata for
+traceability.
+PaymentServ
+iceApplication
+LayerBilling logicHandles subscription
+management, credit
+consumption, transaction
+history, and billing rules.
+NotificationS
+erviceApplication
+LayerAsynchronou
+s messagingSends system notifications
+(email/in-app) when analysis
+results or alerts are available.
+--- PAGE 46 ---
+ai-core AI
+MicroserviceAI pipeline
+executionOperates as an
+independent
+microservice,
+communicating with
+the backend via
+RESTful APIs.
+Designed for
+horizontal scaling
+and GPU
+acceleration.
+ImagePreprocessin
+gAI CoreImage
+normalizationPerforms resizing,
+noise reduction,
+illumination
+correction, and
+quality validation of
+retinal images.
+VesselSegmentatio
+nAI CoreFeature
+extractionApplies deep
+learning models to
+segment retinal
+blood vessels and
+structural features.
+RiskAssessmentAI CorePrediction &
+scoringEstimates disease
+risk levels (e.g.,
+hypertension,
+diabetic
+complications,
+stroke risk).
+Explainability AI CoreModel
+interpretabilit
+yGenerates
+explainable outputs
+such as heatmaps
+and annotated
+images to supportPackage LayerResponsibilit
+iesDescription
+--- PAGE 47 ---
+clinical decision-
+making.
+ModelManagementAI CoreModel
+lifecycleHandles versioning,
+threshold
+configuration,
+retraining policies,
+and traceability of
+AI outputs.
+domain Domain LayerCore business
+modelContains domain
+entities, value
+objects, and
+business rules,
+independent of
+frameworks and
+infrastructure.
+User / Doctor /
+ClinicDomain LayerIdentity & rolesRepresents
+system actors
+and RBAC-
+related
+attributes.
+Image Domain LayerMedical dataEncapsulates
+retinal image
+metadata and
+lifecycle states.
+Analysis Domain LayerDiagnostic
+resultsRepresents AI-
+generated
+outcomes, risk
+scores, and
+explainability
+references.Package Layer ResponsibilitiesDescription
+--- PAGE 48 ---
+Report Domain LayerClinical
+documentationModels
+structured
+diagnostic
+reports with AI
+version and
+threshold
+traceability.
+Payment Domain LayerBilling entitiesRepresents
+transactions,
+subscriptions,
+and credit usage.
+Feedback Domain LayerLearning loopCaptures doctor
+feedback for AI
+model
+improvement
+and auditing.
+infrastructureInfrastructure
+LayerTechnical
+implementationProvides
+persistence,
+external service
+integration, and
+operational
+concerns.
+Persistence
+(PostgreSQL /
+MongoDB)Infrastructure
+LayerData storageStores structured
+and unstructured
+data such as
+users, analyses,
+and logs.Package Layer ResponsibilitiesDescription
+--- PAGE 49 ---
+Cloudinary
+StorageInfrastructure
+LayerImage storageSecure cloud
+storage for
+retinal images
+and generated
+visualizations.
+Supabase AuthInfrastructure
+LayerIdentity providerManages
+authentication,
+OAuth, and
+token-based
+access control.
+Notification
+ProviderInfrastructure
+LayerMessagingIntegrates email
+or push
+notification
+services.
+Logging &
+MonitoringInfrastructure
+LayerObservabilityCentralized
+logging, auditing,
+error tracking,
+and system
+monitoring.
+--- PAGE 50 ---
+2. Database Design 
+2.1 User Table 
+User_IDint Unique user identifierYesYesPK
+Emailvarchar
+(255)User email address
+(Login)YesYesNo
+Passwor
+dvarchar
+(255)Encrypted passwordNoYesNo
+Full_Na
+menvarchar
+(255)User's full name NoYesNo
+Phonevarchar
+(50)Contact phone numberNoNoNo
+Avatar_u
+rlvarchar(25
+5)URL link to profile pictureNoNoNoFiled
+NameTypeDescription Uniqu
+eNot
+nullPK,F
+K
+--- PAGE 51 ---
+2.2 Doctors Table
+2.3 Patients Table doctor_idint Unique identifier for the
+doctorYesYesPK
+specialtynvarchar(2
+55)Doctor's medical
+specialty (e.g.,
+Cardiology)NoNoNo
+license_n
+ovarchar(50
+)Medical license numberYesNoNo
+updated_
+attimestampThe last time the record
+was updatedNoNoNo
+User_idint Reference to the User
+accountYesYesFKFiled
+NameTypeDescription Uniq
+ueNot
+nullPK,F
+K
+patients_idintUnique identifier for the
+patientYesYesPK
+patient_co
+devarchar(1
+00)Internal medical code for
+the patientYesYesNo
+dob dateDate of birth NoYesNo
+gendervarchar(1
+0)Patient's gender NoNoNo
+medical_pr
+ofile_jsontextDetailed medical history
+in JSON formatNoNoNo
+updated_attimestam
+pLast update timestampNoNoNoField NameTypeDescription Uniqu
+eNot
+nullPK,F
+K
+--- PAGE 52 ---
+2.4 Auth_identities Table
+2.5 Clinics TableUser_idintReference to the
+associated User accountYesYesFK
+Identity_idintUnique identifier for the
+login identityYesYesPK
+Providervarchar(
+50)Social login provider
+(e.g., Google, Facebook)NoYesNo
+Create_attimesta
+mpDate and time when the
+link was createdNoYesNo
+Provider_us
+er_idintThe user ID provided by
+the external serviceYesYesNo
+Used_idintReference to the internal
+User accountNoYesFKField NameTypeDescription Uniqu
+eNot
+nullPK,F
+K
+clinics_i
+dint Unique identifier for the
+clinicYesYesPK
+clinics_n
+amenvarchar(
+50)Full name of the clinicNoYesNo
+addressnvarchar(
+500)Physical location addressNoYesNo
+verificati
+on_statu
+svarchar(5
+0)Status of clinic verification
+(e.g., Pending, Verified)NoNoNoField
+NameTypeDescription Uniqu
+eNot
+nullPK,F
+K
+--- PAGE 53 ---
+2.6 Clinic_members Table 
+2.7 Conversations Table verified_
+attimestam
+pDate and time when the
+clinic was verifiedNoNoNo
+ create_a
+t timestam
+p Timestamp when the
+record was created No Yes No
+Clinic_memb
+er_idintUnique identifier for
+the membershipYesYesPK
+member_rolevarchar(
+50)Role of the member
+(e.g., Admin, Staff,
+Doctor)NoYesNo
+status varchar(
+255)Membership status
+(e.g., Active, Inactive)NoYesNo
+joined_attimestam
+pDate and time when
+the member joinedNoYesNo
+Clinic_idintReference to the clinicNoYesFK
+Used_idintReference to the
+internal User accountNoYesFKField NameTypeDescription Uniqu
+eNot
+nullPK,F
+K
+conversat
+ion_idint Unique identifier for the
+conversationYesYesPK
+created_a
+ttimestam
+pTime when the
+conversation startedNoYesNo
+statusvarchar(2
+55)Status of conversation
+(e.g., Active, Closed)NoYesNoField
+NameTypeDescription Uniqu
+eNot
+nullPK,F
+K
+--- PAGE 54 ---
+2.8 Messages Table
+2.9 Roles table doctor_idint Reference to the doctor in
+the conversationNoYesFK
+patient_idint Reference to the patient in
+the conversationNoYesFK
+message_idintUnique identifier for the
+messageYesYesPK
+sender_use
+r_idintReference to the user
+who sent the messageNoYesFK
+message_ty
+pevarchar(
+50)Type of message (e.g.,
+text, image, file)NoYesNo
+contenttextThe actual text content
+of the messageNoNoNo
+attachment
+_urlvarchar(
+255)URL link to any attached
+fileNoNoNo
+conversatio
+n_idintReference to the
+conversation this
+message belongs toNoYesFKField NameTypeDescription Uniqu
+eNot
+nullPK,F
+K
+role_idint Role ID (a unique identifier
+for each role)YesYesPK
+role_nam
+evarchar(2
+55)Role Name (ADMIN,
+DOCTOR, PATIENT,
+CLINIC)YesYesNoField
+NameTypeDescription Uniqu
+eNot
+nullPK,F
+K
+--- PAGE 55 ---
+2.10 Permissions
+2.11 Notifications Tabledescripti
+ontextDescribe the function of
+the role.NoNoNo
+created_
+attimestam
+pTime to create a roleNoYesNo
+updated
+_attimestam
+pLast updated role NoNoNo
+permission_
+idintPermission codes,
+unique identifiers for
+each system
+permission.YesYesPK
+permission_
+codevarchar(1
+00)Permission codes (e.g.,
+view_result,
+manage_user,
+view_report)YesYesNo
+descriptiontextDetailed description of
+the function of the rightNoNoNoField NameTypeDescription Uniqu
+eNot
+nullPK,F
+K
+notificatio
+n_idintToken, a unique
+identifier for each
+message.Yes Yes PK
+template_i
+dintThe notification code
+is used.NoNoFK →
+notificatio
+n_templat
+es.templa
+te_idField
+NameTypeDescription Uniqu
+eNot
+nullPK,FK
+--- PAGE 56 ---
+2.12 Doctors_patient_assignments Tabletitle varchar(2
+55)Notification titleNoYes No
+bodytextThe detailed content
+of the
+announcement.NoYes No
+typevarchar(5
+0)Notification type
+(ai_result, payment,
+warning, system, …)NoYes No
+ref_typevarchar(5
+0)Related object types
+(analysis_request,
+payment, report, ...)NoNoNo
+ref_idintID of the related
+objectNoNoNo
+statusvarchar(2
+55)Notification status
+(sent, read)NoYes No
+sent_attimestam
+pNotification timeNoYes No
+user_idintUser ID to receive
+notificationsNoYes FK →
+users.use
+r_id
+assignmen
+ts_idintUnique identifier for the
+assignment recordYesYesPK
+statusvarchar(
+50)Current status of the
+assignment (e.g., Active,
+Completed)NoYesNo
+assigned_
+attimestam
+pTimestamp when the
+doctor was assigned toNoYesNoField NameTypeDescription Uniq
+ueNot
+nullPK,F
+K
+--- PAGE 57 ---
+2.13 Usage_logs table
+2.14 Screening campaigns tablethe patient
+doctor_idintReference to the assigned
+doctorNoYesFK
+patient_idintReference to the patient in
+this assignmentNoYesFK
+usage_idintUnique identifier for the
+usage logYesYesPK
+intNumber of units consumed
+during usageNoYesNo
+used_attimesta
+mpDate and time when the
+usage occurredNoYesNo
+subscriptio
+n_idintReference to the
+associated subscriptionNoYesFK
+request_idintReference to the specific
+request madeNoYesFKField NameTypeDescription Uniqu
+eNot
+nullPK,F
+K
+campaign
+_idint Unique identifier for the
+screening campaignYesYesPK
+namenvarchar(
+255)Name of the screening
+campaignNoYesNo
+start_dat
+edateThe start date of the
+campaignNoYesNoField
+NameTypeDescription Uniq
+ueNot
+nullPK,F
+K
+--- PAGE 58 ---
+2.15 Doctor_reviews table
+2.16 Subscriptions Table end_datedateThe end date of the
+campaignNoYesNo
+descriptio
+ntextDetailed information about
+the campaignNoNoNo
+review_idint Unique identifier for the
+reviewYesYesPK
+final_risk_l
+evelnvarchar(10
+0)Assessment of risk
+level (e.g., High, Low)NoYesNo
+doctor_not
+esnvarchar(m
+ax)Detailed clinical notes
+from the doctorNoNoNo
+review_attimestampDate and time when the
+review was conductedNoYesNo
+doctor_idint Reference to the doctor
+performing the reviewNoYesFK
+result_idint Reference to the
+specific screening
+result being reviewedNoYesFKField
+NameTypeDescription Uniqu
+eNot
+nullPK,F
+K
+subscriptio
+n_idintUnique identifier for the
+subscriptionYesYesPK
+owner_typevarchar(
+50)Type of entity owning
+the subscription (e.g.,
+User, Clinic)NoYesNoField NameTypeDescription Uniqu
+eNot
+nullPK,F
+K
+--- PAGE 59 ---
+2.17 Payments table start_attimestam
+pThe date and time the
+subscription startsNoYesNo
+end_attimestam
+pThe date and time the
+subscription expiresNoNoNo
+statusvarchar(
+255)Current status (e.g.,
+Active, Expired,
+Canceled)NoYesNo
+remaining_
+quotaintNumber of units or
+credits remaining in the
+planNoNoNo
+user_idintReference to the User (if
+owner is a user)NoNoFK
+clinic_idintReference to the Clinic
+(if owner is a clinic)NoNoFK
+plan_idintReference to the specific
+pricing planNoYesFK
+paymen
+t_idint Unique identifier for the
+paymentYesYesPK
+owner_t
+ypevarchar(5
+0)Type of entity making the
+payment (e.g., User, Clinic)NoYesNo
+owner_
+user_idint Reference to the user who
+performed the transactionNoYesFK
+amountdecimal(1
+8,2)The total amount paidNoYesNo
+methodvarchar(5
+0)Payment method (e.g.,
+Credit Card, Bank Transfer)NoYesNoField
+NameTypeDescription Uniqu
+eNot
+nullPK,F
+K
+--- PAGE 60 ---
+2.18 Plans tableprovidervarchar(5
+0)Payment gateway provider
+(e.g., Stripe, VNPay, MoMo)NoNoNo
+transact
+ion_cod
+evarchar(2
+55)Reference code from the
+payment providerYesNoNo
+statusvarchar(5
+55)Transaction status (e.g.,
+Pending, Completed, Failed)NoYesNo
+paid_attimestam
+pExact time when the
+payment was successfulNoNoNo
+created
+_attimestam
+pTime when the payment
+record was first createdNoYesNo
+plan_idint Unique identifier for the
+pricing planYesYesPK
+namenvarchar(
+255)Name of the plan (e.g.,
+Basic, Premium)NoYesNo
+pricedecimal(1
+8,2)Cost of the plan NoYesNo
+currencyvarchar(1
+0)Currency code (e.g., VND,
+USD)NoYesNo
+quota_im
+agesint Number of image
+processings allowedNoNoNo
+duration_
+daysint Validity period in daysNoYesNo
+activebooleanWhether the plan is
+currently availableNoYesNoField
+NameTypeDescription Uniq
+ueNot
+nullPK,F
+K
+--- PAGE 61 ---
+2.19 Medical_notes table 
+2.20 Report_items table Tablecreated_a
+ttimestam
+pTimestamp when the plan
+was createdNoYesNo
+note_idintUnique identifier for the
+medical noteYesYesPK
+note_ty
+pevarchar(
+50)Category of the note (e.g.,
+Clinical, Follow-up)NoYesNo
+content
+stextThe detailed content of the
+medical noteNoYesNo
+create_
+attimesta
+mpDate and time when the note
+was createdNoYesNo
+patient
+_idintReference to the patient
+whom the note is aboutNoYesFK
+doctor_
+idintReference to the doctor who
+wrote the noteNoYesFK
+result_i
+dintReference to the specific
+screening result related to this
+noteNoNoFKField
+NameTypeDescription Uniq
+ueNot
+nullPK,F
+K
+report_ite
+m_idint Unique identifier for the
+specific report itemYesYesPK
+report_idint Reference to the main
+report this item belongs
+toNoYesFKField
+NameTypeDescription Uniqu
+eNot
+nullPK,F
+K
+--- PAGE 62 ---
+2.21 Campaign_requests Table
+2.22 Analysis_requests table Tablerequest_idint Reference to the original
+screening requestNoYesFK
+item_valuenvarchar(
+max)The specific data or
+finding for this itemNoNoNo
+item_typevarchar(50
+)The category or type of
+the report itemNoNoNo
+campaign
+_idintReference to the specific
+screening campaignNoYesPK,
+FK
+request_i
+dintReference to the specific
+screening requestNoYesPK,
+FKField
+NameTypeDescription Uniq
+ueNot
+nullPK,F
+K
+request_idintUnique identifier for the
+analysis requestYesYesPK
+requester_
+typevarchar(
+50)Type of entity initiating
+the request (e.g., Patient,
+Clinic)NoYesNo
+statusvarchar(
+255)Current state of the
+analysis (e.g., Pending,
+Processing, Completed)NoYesNo
+created_attimestam
+pDate and time when the
+request was submittedNoYesNo
+completed
+_attimestam
+pDate and time when the
+analysis was finishedNoNoNoField NameTypeDescription Uniqu
+eNot
+nullPK,
+FK
+--- PAGE 63 ---
+2.23 Ai_feelback table Tablemodel_ver
+sionvarchar(
+50)The specific version of
+the AI model used for the
+analysisNoNoNo
+profile_idintReference to the profile
+associated with the
+requestNoNoFK
+patient_idintReference to the patient
+whose data is being
+analyzedNoYesFK
+clinic_idintReference to the clinic if
+the request was made via
+a medical facilityNoNoFK
+feedback_
+idint Unique identifier for
+each specific feedback
+recordYesYesPK
+feedback_
+typevarchar(5
+0)Categorization of the
+feedback (e.g.,
+Accuracy, UX, Clinical
+Error)NoYesNo
+commentnvarchar(
+max)Detailed textual remarks
+provided by the reviewerNoNoNo
+created_attimestampThe exact timestamp
+when the feedback was
+submittedNoYesNo
+request_idint Reference to the
+specific analysis request
+being reviewedNoYesFK 
+(ai1)Field
+NameType
+(Suggest
+ed)Description Uniqu
+eNot
+NullPK,
+FK
+--- PAGE 64 ---
+2.24 Notification_templates Table
+2.25  AI_Models Tabledoctor_idint Reference to the
+medical professional
+providing the feedbackNoNoFK 
+(ai2)
+templat
+e_idintUnique identifier for each
+notification templateyesyesPK
+codevarchar(1
+00)Unique code to identify the
+notification templateyesyesNo
+title_tplvarchar(
+255)Template for the notification
+titleNoyesNo
+body_tp
+ltextTemplate for the notification
+body contentNoyesNo
+channelvarchar(
+50)Delivery channel of the
+notification (in_app, email,
+sms)NoyesNo
+activebooleanIndicates whether the
+notification template is
+activeNoyesNoField
+NameTypeDescription Uniq
+ueNot
+nullPK,
+FK
+model_i
+dint Unique identifier for each
+AI modelyesyesPK
+versionvarchar(5
+0)Version identifier of the AI
+model (e.g. v1.0, v2.1)yesyesNo
+deploye
+dbooleanIndicates whether the AI
+model is currently deployedNoyesNoField
+NameTypeDescription Uniq
+ueNot
+nullPK,
+FK
+--- PAGE 65 ---
+2.26 retraining_jobs tablein production
+statusvarchar(2
+55)Current status of the AI
+model (active, inactive,
+deprecated)NoyesNo
+job_idint Unique identifier for
+each retraining jobyesyesPK
+trigger_rea
+sonvarchar(2
+55)Reason that triggered
+the retraining job
+(manual,
+low_accuracy,
+scheduled,
+feedback_based)NoyesNo
+dataset_re
+fvarchar(2
+55)Reference to the
+dataset used for
+retraining (dataset ID
+or storage path)NoyesNo
+statusvarchar(2
+55)Current status of the
+retraining job
+(pending, running,
+completed, failed)NoyesNo
+started_attimestam
+pTimestamp when the
+retraining job startedNoNoNo
+metrics_js
+onjsonEvaluation metrics
+after retraining
+(accuracy, precision,
+recall, etc.)NoNoNo
+model_idint Identifier of the AI
+model associated withNoyesFK →
+ai_modField
+NameTypeDescription Uniq
+ueNot
+nullPK, FK
+--- PAGE 66 ---
+2.27 audit_logs Table
+2.28 ai_threshold_profiles Tablethis retraining job els.mod
+el_id
+log_idint Unique identifier for each
+audit log entryyesyesPK
+user_idint Identifier of the user who
+performed the actionNoNoFK →
+users
+.user
+_id
+actionvarchar(5
+0)Action performed by the
+user (create, update, delete,
+login, view)NoyesNo
+entity_t
+ypevarchar(5
+0)Type of entity affected
+(user, clinic, report,
+analysis_request, etc.)NoyesNo
+entity_i
+dint Identifier of the affected
+entity recordNoNoNo
+ip_addr
+essvarchar(4
+5)IP address from which the
+action was performedNoNoNo
+user_ag
+entvarchar(2
+55)Client user agent
+information (browser or
+device)NoNoNo
+created
+_attimestam
+pTimestamp when the action
+was recordedNoyesNoField
+NameTypeDescription Uniq
+ueNot
+nullPK,
+FK
+Field
+NameTypeDescription Uniq
+ueNot
+nullPK,
+FK
+--- PAGE 67 ---
+2.29 retinal_images Tableprofile_i
+dint Unique identifier for each AI
+threshold profileyesyesPK
+namevarchar(2
+55)Name of the threshold
+profileyesyesNo
+threshol
+dstestThreshold configuration
+values for AI risk
+classificationNoyesNo
+activebooleanIndicates whether the
+threshold profile is currently
+activeNoyesNo
+created
+_attimestam
+pTimestamp when the
+threshold profile was
+createdNoyesNo
+image_idint Unique identifier for
+each retinal imageyesyesPK
+image_typ
+evarchar(2
+0)Type of retinal image
+(fundus, oct)NoyesNo
+storage_ur
+lvarchar(5
+00)Storage location URL of
+the retinal image fileyesyesNo
+checksumvarchar(2
+55)Checksum value used
+to verify image integrityyesyesNo
+uploaded_
+attimestam
+pTimestamp when the
+image was uploadedNoyesNo
+metadata_
+jsontestAdditional metadata of
+the image (device,
+resolution, format, etc.)NoNoNoField
+NameTypeDescription Uniqu
+eNot
+nullPK, FK
+--- PAGE 68 ---
+2.30 analysis_results Table
+2.31 image_annotations Tablerequest_idint Identifier of the analysis
+request associated with
+this imageNoyesFK →
+analys
+is_req
+uests.
+reque
+st_id
+result_idintUnique identifier for each
+AI analysis resultyesyesPK
+statusvarchar(
+50)Current status of the
+analysis result
+(generated, reviewed,
+finalized)NoyesNo
+risk_levelvarchar(
+20)Risk level predicted by
+the AI model (low,
+medium, high)NoyesNo
+predicted_l
+abels_jsontestPredicted disease labels
+and probabilities
+generated by the AI
+modelNoyesNo
+generated_
+attimesta
+mpTimestamp when the AI
+analysis result was
+generatedNoyesNoField NameTypeDescription Uniq
+ueNot
+nullPK,
+FK
+annotati
+on_idintUnique identifier for
+each imageyesyesPKField
+NameTypeDescription Uniqu
+eNot
+nullPK, FK
+--- PAGE 69 ---
+2.32 Reports table annotation
+annotati
+on_typevarchar(5
+0)Type of annotation
+(mask, heatmap,
+bounding_box)NoyesNo
+annotati
+on_urlvarchar(5
+00)Storage URL of the
+annotation fileNoyesNo
+created
+_attimestam
+pTimestamp when the
+annotation was
+createdNoyesNo
+result_i
+dintIdentifier of the
+analysis result
+associated with this
+annotationNoyesFK →
+analysis_re
+sults.result_
+id
+report_i
+dint Unique identifier for the
+generated medical reportYesYesPK
+report_t
+ypevarchar(5
+0)Categorization of the report
+(e.g., Summary, Detailed,
+AI-Analysis)NoYesNo
+file_pdf_
+urlvarchar(5
+12)URL/Path to the
+downloadable PDF version
+of the reportNoNoNo
+file_csv_
+urlvarchar(5
+12)URL/Path to the raw data
+version of the report in CSV
+formatNoNoNo
+created_
+attimestam
+pThe exact date and time the
+report was generatedNoYesNoField
+NameType
+(Suggest
+ed)Description Uniqu
+eNot
+NullPK,
+FK
+--- PAGE 70 ---
+2.33 user_roles table
+2.34 role_permissions table 
+3. Detailed Design
+3.1 Tài kho ả n, Xác th ự c, Phân quy ề n (Account & RBAC)
+3.1.1. Class Diagram patients
+_idvarchar(2
+55)Reference to the specific
+patient this report belongs
+toNoYesFK
+(ai)
+user_idintIdentifier of the user
+assigned to a rolenoyesPK, FK →
+users.us
+er_id
+role_idintIdentifier of the role
+assigned to the usernoyesPK, FK →
+roles.role
+_idField
+NameTypeDescription Uniq
+ueNot
+nullPK, FK
+role_idintIdentifier of the role that
+owns the permissionnoyesPK, FK →
+roles.role
+_id
+permissio
+n_idintIdentifier of the
+permission granted to the
+rolenoyesPK, FK →
+permissio
+ns.permis
+sion_idField
+NameTypeDescription Uniq
+ueNot
+nullPK, FK
+--- PAGE 71 ---
+3.1.2. Sequence Diagram
+3.2. Hồ sơ  ng ư ờ i dùng & h ồ  s ơ  y t ế  c ơ  b ả n (Profile)
+3.2.1. Quản lý h ồ  s ơ  Patient
+3.2.1.1. Class Diagram
+
+--- PAGE 72 ---
+3.2.1.2. Sequence Diagram
+Hình: View Patient Profile
+Hình: Update Patient Profile (Patient only)
+
+--- PAGE 73 ---
+3.2.2. Quả n lý h ồ  s ơ  Doctor + Licensing
+3.2.2.1. Class Diagram
+3.2.2.2. Sequence Diagram
+
+--- PAGE 74 ---
+3.2.3. Quả n lý clinic + thành viên clinic
+3.2.3.1. Class Diagram
+3.2.3.2. Sequence Diagram
+Hình: Add Member to Clinic
+
+--- PAGE 75 ---
+Hình: Update Clinic Info
+3.3. Upload ả nh & Yêu c ầ u phân tích AI (AI Request)
+3.3.1. Class Diagram
+3.3.2. Sequence Diagram
+3.3.2.1. Upload Single Retinal Image
+
+--- PAGE 76 ---
+3.3.2.2. Submit for AI Analysis (Fixed)
+3.3.2.3. Bulk Upload Retinal Image
+3.4. Xử lý AI & Tr ả  k ế t qu ả  (AI Processing & Result)
+3.4.1 Class Diagram
+
+--- PAGE 77 ---
+3.4.2 Sequence Diagram
+3.4.2.1 Submit images for AI analysis
+3.4.2.2 View AI Result Detail + History
+
+--- PAGE 78 ---
+3.5.Doctor Review & Clinical Validationag
+3.5.1. Class Diagram 
+3.5.2. Sequence Diagram
+3.5.2.1. Doctor Review + Validate/Correct + Add Medical Note
+
+--- PAGE 79 ---
+3.5.2.2. Notify patient after doctor review
+3.6. Reports (PDF / Diagnostic report)
+3.6.1. Class Diagram
+
+--- PAGE 80 ---
+3.6.2. Sequence Diagram
+3.6.2.1. Generate Clinic Report
+3.6.2.2. Download Diagnostic Report
+
+--- PAGE 81 ---
+3.6.2.3. Export Summary (clinic / range / filters)
+3.7. Notification & Communication
+3.7.1. Class Diagram
+
+--- PAGE 82 ---
+3.7.2. Sequence Diagram
+3.7.2.1. Receive Notifications (Get list + Mark as read)
+3.7.2.1.1. Get notifications
+3.7.2.1.2. Mark notifications as read
+
+--- PAGE 83 ---
+3.7.2.2. Chat with doctor / chat with patient
+3.7.2.2.1. Get chat threads (conversations)
+3.7.2.2.2. Get messages in a conversation
+
+--- PAGE 84 ---
+3.7.2.2.3. Send message (có attachment_url)
+3.8. Clinic Operations
+3.8.1. Class Diagram
+3.8.2. Sequence Diagram
+3.8.2.1 Clinic create Screening Campaign
+
+--- PAGE 85 ---
+3.8.2.2 Assign Doctor for Patient (Clinic Operation)
+3.8.2.3 Track Image Usage & except Quota
+3.8.2.4 Clinic see Usage Report
+
+--- PAGE 86 ---
+3.9. Billing & Subscription
+3.9.1. Class Diagram
+3.9.2. Sequence Diagram
+3.9.2.1 Purchase Package
+
+--- PAGE 87 ---
+3.9.2.2 Renew Package 
+3.9.2.3 View Payment History
+
+--- PAGE 88 ---
+3.9.2.4 View Current Subscription
+3.10 Admin / Compliance / Audit / AI Ops
+3.10.1 Class Diagram
+3.10.2 Sequence Diagram
+3.10.2.1 Approve / Suspend Clinics
+
+--- PAGE 89 ---
+3.10.2.2  Audit Logs / System Monitoring
+3.10.2.3.1  AI Model Management + Retraining
+3.10.2.3.2 Retraining AI Model 
+
+--- PAGE 90 ---
+3.10.2.3.3 AI Feedback
+3.10.2.4 Configure Risk Thresholds / AI Parameters
+
+--- PAGE 91 ---
+Preview unavailable
