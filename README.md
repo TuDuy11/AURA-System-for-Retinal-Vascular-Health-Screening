@@ -53,5 +53,9 @@ docker compose up -d --build
 ## Cách test 
 -  Truy cập localhost:9999/health
 
+
+## test font-end 
+- truy cập http://localhost:5173/
+
 password databasse 
 b9zRGHuG89M/cF5
