@@ -1,10 +1,10 @@
-from flask import Blueprint, jsonify, render_template
+from flask import Blueprint, jsonify
 
 health_bp = Blueprint("health", __name__)
 
 @health_bp.get("/")
 def index():
-    return render_template("index.html")
+    return jsonify({"message": "Welcome to AURA API"}), 200
 
 @health_bp.get("/health")
 def health_check():

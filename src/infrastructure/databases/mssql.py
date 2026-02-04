@@ -5,7 +5,12 @@ from infrastructure.databases.base import Base
 
 DATABASE_URI = Config.SQLALCHEMY_DATABASE_URI  
 
-engine = create_engine(DATABASE_URI)
+# Create engine with SQLite-specific options
+if 'sqlite' in DATABASE_URI:
+    engine = create_engine(DATABASE_URI, connect_args={"check_same_thread": False})
+else:
+    engine = create_engine(DATABASE_URI)
+
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 def get_db_session():

@@ -8,25 +8,25 @@ class Config:
     DEBUG = os.environ.get('DEBUG', 'False').lower() in ['true', '1']
     TESTING = os.environ.get('TESTING', 'False').lower() in ['true', '1']
     
-    # PostgreSQL LOCAL (không phải Supabase)
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URI') or 'postgresql://postgres:b9zRGHuG89M/cF5@db.wfndttxhcxjjndzarwoq.supabase.co:5432/postgres'
+    # SQLite for development (easy to use without external DB)
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URI') or 'sqlite:///aura.db'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     CORS_HEADERS = 'Content-Type'
 
 class DevelopmentConfig(Config):
     """Development configuration."""
     DEBUG = True
-    SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:b9zRGHuG89M/cF5@db.wfndttxhcxjjndzarwoq.supabase.co:5432/postgres'
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///aura.db'
 
 class TestingConfig(Config):
     """Testing configuration."""
     TESTING = True
-    SQLALCHEMY_DATABASE_URI ='postgresql://postgres:b9zRGHuG89M/cF5@db.wfndttxhcxjjndzarwoq.supabase.co:5432/postgres'
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory:'
 
 class ProductionConfig(Config):
     """Production configuration."""
     DEBUG = False
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URI') or 'postgresql://postgres:b9zRGHuG89M/cF5@db.wfndttxhcxjjndzarwoq.supabase.co:5432/postgres'
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URI') or 'sqlite:///aura.db'
 
 class SwaggerConfig:
     """Swagger configuration."""

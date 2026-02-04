@@ -1,12 +1,14 @@
 FROM node:18-alpine
 
-WORKDIR /app/src/frontend
+WORKDIR /app
 
-COPY src/frontend/package*.json ./
+# Copy just package files
+COPY package*.json ./
 
 RUN npm ci --legacy-peer-deps
 
-COPY src/frontend .
+# Copy app
+COPY . .
 
 EXPOSE 5173
 

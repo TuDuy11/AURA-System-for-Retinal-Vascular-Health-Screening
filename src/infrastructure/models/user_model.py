@@ -2,7 +2,6 @@ import uuid
 from sqlalchemy import Column, Integer, String, Boolean, DateTime
 from sqlalchemy.orm import relationship
 from datetime import datetime
-from sqlalchemy.dialects.postgresql import UUID
 
 from infrastructure.databases.base import Base
 from infrastructure.models.associations import user_roles
@@ -10,7 +9,7 @@ from infrastructure.models.associations import user_roles
 class UserModel(Base):
     __tablename__ = "users"
 
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
     email = Column(String(255), unique=True, nullable=False)
     password_hash = Column(String(255), nullable=False)
 

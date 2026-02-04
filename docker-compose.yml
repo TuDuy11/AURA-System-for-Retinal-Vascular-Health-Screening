@@ -11,13 +11,14 @@ services:
 
   frontend:
     build:
-      context: .
-      dockerfile: Dockerfile.frontend
+      context: ./src
+      dockerfile: ../Dockerfile.frontend
+      args:
+        - FRONTEND_DIR=Web Interface for AURA Clinic (1)
     image: aura-frontend
     ports:
       - "5173:5173"
-    volumes:
-      - ./src/frontend:/app/src/frontend
-      - /app/src/frontend/node_modules
     environment:
-      - VITE_API_URL=http://localhost:9999/api
+      - VITE_API_URL=http://api:9999/api
+    depends_on:
+      - api
