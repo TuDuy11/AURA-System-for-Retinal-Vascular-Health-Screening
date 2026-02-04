@@ -1,41 +1,11 @@
-# AURA Frontend
 
-React + TypeScript frontend for AURA System
+  # Web Interface for AURA Clinic
 
-## Setup
+  This is a code bundle for Web Interface for AURA Clinic. The original project is available at https://www.figma.com/design/uG433ArcpCJ6CMvpfEWFcS/Web-Interface-for-AURA-Clinic.
 
-```bash
-cd src/frontend
-npm install
-npm run dev
-```
+  ## Running the code
 
-## Structure
+  Run `npm i` to install the dependencies.
 
-```
-src/
-├── components/      # Reusable components (Button, Navigation, etc)
-├── context/         # React Context (Auth)
-├── pages/           # Page components (Landing, Login, Dashboard)
-├── services/        # API services
-├── types/           # TypeScript types
-├── App.tsx         # Main app component
-├── main.tsx        # Entry point
-└── index.css       # Tailwind CSS
-```
-
-## Login Test Credentials
-
-- **Patient**: any@email.com / password
-- **Doctor**: doctor@test.com / password
-- **Admin**: admin@test.com / password
-
-## Features
-
-- ✅ Landing Page with role info
-- ✅ Login Form with mock auth
-- ✅ Protected Routes (authentication required)
-- ✅ Role-based Dashboard (Patient, Doctor, Clinic, Admin)
-- ✅ Responsive Design (TailwindCSS)
-- ✅ Component-based Architecture
-- ✅ TypeScript support
+  Run `npm run dev` to start the development server.
+  
