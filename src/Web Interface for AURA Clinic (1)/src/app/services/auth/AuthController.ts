@@ -47,6 +47,7 @@ export class AuthController {
     }
   }
 
+<<<<<<< HEAD:src/Web Interface for AURA Clinic (1)/src/app/services/auth/AuthController.ts
   static async register(request: { email: string; password: string; fullName: string }): Promise<LoginResponse> {
     const authService = this.getAuthService();
     
@@ -66,6 +67,8 @@ export class AuthController {
     }
   }
 
+=======
+>>>>>>> efcb8ba60e63834eb9db130be1617615df418b0d:src/frontend/src/app/services/auth/AuthController.ts
   /**
    * Google OAuth Login
    * In production: This would redirect to Google OAuth or handle callback

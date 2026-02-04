@@ -6,7 +6,11 @@ import { Label } from './ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
+<<<<<<< HEAD:src/Web Interface for AURA Clinic (1)/src/app/components/RegisterPage.tsx
 const logoImage = 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 200 200%22%3E%3Crect fill=%22%234f46e5%22 width=%22200%22 height=%22200%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22white%22 font-size=%2248%22 font-weight=%22bold%22%3EAURA%3C/text%3E%3C/svg%3E';
+=======
+import logoImage from 'figma:asset/bc4a6196f2ea60ceb4bf7a5ed0a8563545e7d16f.png';
+>>>>>>> efcb8ba60e63834eb9db130be1617615df418b0d:src/frontend/src/app/components/RegisterPage.tsx
 import { LoginResponse } from '@/app/services/auth/types';
 
 interface RegisterPageProps {
@@ -38,10 +42,13 @@ interface DoctorFormData {
 export function RegisterPage({ onBackToLogin, onRegisterSuccess }: RegisterPageProps) {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+<<<<<<< HEAD:src/Web Interface for AURA Clinic (1)/src/app/components/RegisterPage.tsx
   const [patientLoading, setPatientLoading] = useState(false);
   const [patientError, setPatientError] = useState('');
   const [doctorLoading, setDoctorLoading] = useState(false);
   const [doctorError, setDoctorError] = useState('');
+=======
+>>>>>>> efcb8ba60e63834eb9db130be1617615df418b0d:src/frontend/src/app/components/RegisterPage.tsx
   
   const [patientForm, setPatientForm] = useState<PatientFormData>({
     fullName: '',
@@ -114,6 +121,7 @@ export function RegisterPage({ onBackToLogin, onRegisterSuccess }: RegisterPageP
     return true;
   };
 
+<<<<<<< HEAD:src/Web Interface for AURA Clinic (1)/src/app/components/RegisterPage.tsx
   const handlePatientRegister = async () => {
     if (!validatePatientForm()) return;
 
@@ -219,6 +227,81 @@ export function RegisterPage({ onBackToLogin, onRegisterSuccess }: RegisterPageP
       } else {
         setDoctorError('Có lỗi xảy ra. Vui lòng thử lại.');
       }
+=======
+  const handlePatientRegister = () => {
+    if (!validatePatientForm()) return;
+
+    try {
+      // Get existing users from localStorage
+      const existingUsers = JSON.parse(localStorage.getItem('aura_patients') || '[]');
+
+      // Check if email already exists
+      if (existingUsers.some((u: any) => u.email === patientForm.email)) {
+        alert('Email đã được đăng ký. Vui lòng sử dụng email khác.');
+        return;
+      }
+
+      // Create new user
+      const newUser = {
+        id: `patient-${Date.now()}`,
+        fullName: patientForm.fullName,
+        email: patientForm.email,
+        password: patientForm.password,
+        phone: patientForm.phone,
+        dateOfBirth: patientForm.dateOfBirth,
+        gender: patientForm.gender,
+        registeredDate: new Date().toISOString(),
+      };
+
+      // Save to localStorage
+      existingUsers.push(newUser);
+      localStorage.setItem('aura_patients', JSON.stringify(existingUsers));
+
+      alert('Đăng ký thành công! Bạn có thể đăng nhập ngay.');
+      onBackToLogin();
+    } catch (error) {
+      console.error('Error registering patient:', error);
+      alert('Có lỗi xảy ra. Vui lòng thử lại.');
+    }
+  };
+
+  const handleDoctorRegister = () => {
+    if (!validateDoctorForm()) return;
+
+    try {
+      // Get existing doctors from localStorage
+      const existingDoctors = JSON.parse(localStorage.getItem('aura_doctors') || '[]');
+
+      // Check if email already exists
+      if (existingDoctors.some((d: any) => d.email === doctorForm.email)) {
+        alert('Email đã được đăng ký. Vui lòng sử dụng email khác.');
+        return;
+      }
+
+      // Create new doctor
+      const newDoctor = {
+        id: `doctor-${Date.now()}`,
+        fullName: doctorForm.fullName,
+        email: doctorForm.email,
+        password: doctorForm.password,
+        phone: doctorForm.phone,
+        specialization: doctorForm.specialization,
+        licenseNumber: doctorForm.licenseNumber,
+        yearsOfExperience: doctorForm.yearsOfExperience,
+        registeredDate: new Date().toISOString(),
+        status: 'pending', // Pending verification
+      };
+
+      // Save to localStorage
+      existingDoctors.push(newDoctor);
+      localStorage.setItem('aura_doctors', JSON.stringify(existingDoctors));
+
+      alert('Đăng ký thành công! Tài khoản của bạn đang chờ xác thực. Bạn có thể đăng nhập ngay.');
+      onBackToLogin();
+    } catch (error) {
+      console.error('Error registering doctor:', error);
+      alert('Có lỗi xảy ra. Vui lòng thử lại.');
+>>>>>>> efcb8ba60e63834eb9db130be1617615df418b0d:src/frontend/src/app/components/RegisterPage.tsx
     }
   };
 
@@ -403,6 +486,7 @@ export function RegisterPage({ onBackToLogin, onRegisterSuccess }: RegisterPageP
                   </div>
                 </div>
 
+<<<<<<< HEAD:src/Web Interface for AURA Clinic (1)/src/app/components/RegisterPage.tsx
                 {patientError && (
                   <div className="p-3 bg-red-50 border border-red-200 rounded text-red-700 text-sm">
                     {patientError}
@@ -417,6 +501,15 @@ export function RegisterPage({ onBackToLogin, onRegisterSuccess }: RegisterPageP
                 >
                   {patientLoading ? 'Đang đăng ký...' : 'Đăng ký tài khoản'}
                   {!patientLoading && <UserCircle2 className="w-4 h-4 ml-2" />}
+=======
+                <Button
+                  onClick={handlePatientRegister}
+                  className="w-full bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 text-white shadow-lg"
+                  size="lg"
+                >
+                  <UserCircle2 className="w-4 h-4 mr-2" />
+                  Đăng ký tài khoản
+>>>>>>> efcb8ba60e63834eb9db130be1617615df418b0d:src/frontend/src/app/components/RegisterPage.tsx
                 </Button>
               </TabsContent>
 
@@ -562,6 +655,7 @@ export function RegisterPage({ onBackToLogin, onRegisterSuccess }: RegisterPageP
                   <strong>Lưu ý:</strong> Tài khoản bác sĩ cần được xác thực trước khi sử dụng đầy đủ tính năng.
                 </div>
 
+<<<<<<< HEAD:src/Web Interface for AURA Clinic (1)/src/app/components/RegisterPage.tsx
                 {doctorError && (
                   <div className="p-3 bg-red-50 border border-red-200 rounded text-red-700 text-sm">
                     {doctorError}
@@ -576,6 +670,15 @@ export function RegisterPage({ onBackToLogin, onRegisterSuccess }: RegisterPageP
                 >
                   {doctorLoading ? 'Đang đăng ký...' : 'Đăng ký tài khoản'}
                   {!doctorLoading && <Stethoscope className="w-4 h-4 ml-2" />}
+=======
+                <Button
+                  onClick={handleDoctorRegister}
+                  className="w-full bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 text-white shadow-lg"
+                  size="lg"
+                >
+                  <Stethoscope className="w-4 h-4 mr-2" />
+                  Đăng ký tài khoản
+>>>>>>> efcb8ba60e63834eb9db130be1617615df418b0d:src/frontend/src/app/components/RegisterPage.tsx
                 </Button>
               </TabsContent>
             </Tabs>

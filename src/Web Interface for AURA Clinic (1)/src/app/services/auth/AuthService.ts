@@ -4,8 +4,11 @@ import { IRoleRepository } from './IRoleRepository';
 import { ITokenService } from './ITokenService';
 import { LoginRequest, GoogleLoginRequest, LoginResponse, UserInfo } from './types';
 
+<<<<<<< HEAD:src/Web Interface for AURA Clinic (1)/src/app/services/auth/AuthService.ts
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:9999/api';
 
+=======
+>>>>>>> efcb8ba60e63834eb9db130be1617615df418b0d:src/frontend/src/app/services/auth/AuthService.ts
 export class AuthService {
   constructor(
     private userRepository: IUserRepository,
@@ -15,6 +18,7 @@ export class AuthService {
   ) {}
 
   async login(request: LoginRequest): Promise<LoginResponse> {
+<<<<<<< HEAD:src/Web Interface for AURA Clinic (1)/src/app/services/auth/AuthService.ts
     // Call backend API
     const response = await fetch(`${API_URL}/auth/login`, {
       method: 'POST',
@@ -85,6 +89,48 @@ export class AuthService {
       refreshToken: data.data.refreshToken,
       roles: data.data.roles,
       user: data.data.user,
+=======
+    // Step 1: IUserRepository.findByEmail(email)
+    const user = await this.userRepository.findByEmail(request.email);
+    
+    // If user == null → return 401 Unauthorized
+    if (!user) {
+      throw new Error('UNAUTHORIZED');
+    }
+
+    // Step 2: IPasswordHasher.verify(raw, hash)
+    const isPasswordValid = await this.passwordHasher.verify(
+      request.password,
+      user.passwordHash
+    );
+    
+    // If verify == false → return 401 Unauthorized
+    if (!isPasswordValid) {
+      throw new Error('UNAUTHORIZED');
+    }
+
+    // Step 3: IRoleRepository.getRolesByUserId(userId)
+    const roles = await this.roleRepository.getRolesByUserId(user.id);
+
+    // Step 4: ITokenService.generateAccessToken + generateRefreshToken
+    const accessToken = await this.tokenService.generateAccessToken(user, roles);
+    const refreshToken = await this.tokenService.generateRefreshToken(user);
+
+    // Step 5: Build UserInfo (without sensitive data)
+    const userInfo: UserInfo = {
+      id: user.id,
+      fullName: user.fullName,
+      email: user.email,
+      avatar: user.avatar,
+    };
+
+    // Step 6: Return LoginResponse
+    return {
+      accessToken,
+      refreshToken,
+      roles,
+      user: userInfo,
+>>>>>>> efcb8ba60e63834eb9db130be1617615df418b0d:src/frontend/src/app/services/auth/AuthService.ts
     };
   }
 
