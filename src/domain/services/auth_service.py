@@ -62,6 +62,7 @@ class AuthService:
     #def create_user(self, user: User):
 
     def create_user(self, user:User):
+        print(f"[AUTH SERVICE] Đang xử lý logic đăng ký cho email: {user.email}")
         if not user.email:
             raise ValueError("Email cannot be empty")
         if not user.password:
@@ -74,6 +75,7 @@ class AuthService:
         return self.user_repository.create(user)
     
     def password_hash(self,password:str):
+        print("[SECURITY] Đang thực hiện băm (hashing) mật khẩu mới...")
         # Tạo một salt ngẫu nhiên
         salt = bcrypt.gensalt()
         # Băm mật khẩu với salt

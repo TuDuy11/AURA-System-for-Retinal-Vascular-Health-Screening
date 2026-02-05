@@ -52,7 +52,7 @@ class UserRepositoryInterface(ABC):
             ValueError: Nếu user không hợp lệ hoặc email đã tồn tại.
         """
         pass
-
+    
     @abstractmethod
     def update_user(self, user: User) -> User:
         """
