@@ -4,12 +4,7 @@ import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
-<<<<<<< HEAD:src/Web Interface for AURA Clinic (1)/src/app/components/ResetPasswordPage.tsx
-const logoImage = 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 200 200%22%3E%3Crect fill=%22%234f46e5%22 width=%22200%22 height=%22200%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22white%22 font-size=%2248%22 font-weight=%22bold%22%3EAURA%3C/text%3E%3C/svg%3E';
-=======
-import logoImage from 'figma:asset/bc4a6196f2ea60ceb4bf7a5ed0a8563545e7d16f.png';
->>>>>>> efcb8ba60e63834eb9db130be1617615df418b0d:src/frontend/src/app/components/ResetPasswordPage.tsx
-
+import { logoImage } from '../assets/images';
 interface ResetPasswordPageProps {
   email: string;
   onResetSuccess: () => void;
@@ -240,3 +235,4 @@ export function ResetPasswordPage({ email, onResetSuccess, onBackToLogin }: Rese
     </div>
   );
 }
+

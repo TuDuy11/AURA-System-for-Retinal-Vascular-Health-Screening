@@ -6,13 +6,9 @@ import { Label } from './ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { Alert, AlertDescription } from './ui/alert';
-<<<<<<< HEAD:src/Web Interface for AURA Clinic (1)/src/app/components/LoginPage.tsx
-const logoImage = 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 200 200%22%3E%3Crect fill=%22%234f46e5%22 width=%22200%22 height=%22200%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22white%22 font-size=%2248%22 font-weight=%22bold%22%3EAURA%3C/text%3E%3C/svg%3E';
-=======
-import logoImage from 'figma:asset/bc4a6196f2ea60ceb4bf7a5ed0a8563545e7d16f.png';
->>>>>>> efcb8ba60e63834eb9db130be1617615df418b0d:src/frontend/src/app/components/LoginPage.tsx
 import { AuthController } from '@/app/services/auth/AuthController';
 import { LoginResponse } from '@/app/services/auth/types';
+import { logoImage } from '../assets/images';
 
 interface LoginPageProps {
   onLogin: (role: 'doctor' | 'patient', userId: string, loginResponse: LoginResponse) => void;
@@ -228,7 +224,7 @@ export function LoginPage({ onLogin, onRegisterClick, onForgotPassword, onBackTo
                 </div>
 
                 <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-sm text-blue-700">
-                  <strong>Demo:</strong> patient@example.com / password
+                  <strong>Demo:</strong> patient@example.com / 123456
                 </div>
 
                 <Button
@@ -329,7 +325,7 @@ export function LoginPage({ onLogin, onRegisterClick, onForgotPassword, onBackTo
                 </div>
 
                 <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-sm text-blue-700">
-                  <strong>Demo:</strong> doctor@aura.vn / password
+                  <strong>Demo:</strong> doctor@aura.vn / 123456
                 </div>
 
                 <Button
@@ -387,3 +383,4 @@ export function LoginPage({ onLogin, onRegisterClick, onForgotPassword, onBackTo
     </div>
   );
 }
+

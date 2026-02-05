@@ -47,28 +47,6 @@ export class AuthController {
     }
   }
 
-<<<<<<< HEAD:src/Web Interface for AURA Clinic (1)/src/app/services/auth/AuthController.ts
-  static async register(request: { email: string; password: string; fullName: string }): Promise<LoginResponse> {
-    const authService = this.getAuthService();
-    
-    try {
-      const response = await authService.register(request.email, request.password, request.fullName);
-      
-      // Store tokens in localStorage (for demo)
-      localStorage.setItem('aura_access_token', response.accessToken);
-      localStorage.setItem('aura_refresh_token', response.refreshToken);
-      localStorage.setItem('aura_user_info', JSON.stringify(response.user));
-      localStorage.setItem('aura_user_roles', JSON.stringify(response.roles));
-      
-      return response;
-    } catch (error) {
-      // Re-throw for proper error handling in UI
-      throw error;
-    }
-  }
-
-=======
->>>>>>> efcb8ba60e63834eb9db130be1617615df418b0d:src/frontend/src/app/services/auth/AuthController.ts
   /**
    * Google OAuth Login
    * In production: This would redirect to Google OAuth or handle callback

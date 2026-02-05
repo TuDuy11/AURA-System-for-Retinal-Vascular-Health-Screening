@@ -6,7 +6,7 @@ const MOCK_USERS: User[] = [
   {
     id: 'patient-001',
     email: 'patient@example.com',
-    passwordHash: 'password', // In production this would be hashed
+    passwordHash: '123456', // In production this would be hashed
     fullName: 'Nguyễn Văn A',
     avatar: undefined,
     createdAt: new Date('2024-01-01'),
@@ -14,7 +14,7 @@ const MOCK_USERS: User[] = [
   {
     id: 'doctor-001',
     email: 'doctor@aura.vn',
-    passwordHash: 'password', // In production this would be hashed
+    passwordHash: '123456', // In production this would be hashed
     fullName: 'TS. BS. Nguyễn Thị B',
     avatar: undefined,
     createdAt: new Date('2024-01-01'),

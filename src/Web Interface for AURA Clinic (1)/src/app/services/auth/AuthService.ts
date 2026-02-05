@@ -4,11 +4,6 @@ import { IRoleRepository } from './IRoleRepository';
 import { ITokenService } from './ITokenService';
 import { LoginRequest, GoogleLoginRequest, LoginResponse, UserInfo } from './types';
 
-<<<<<<< HEAD:src/Web Interface for AURA Clinic (1)/src/app/services/auth/AuthService.ts
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:9999/api';
-
-=======
->>>>>>> efcb8ba60e63834eb9db130be1617615df418b0d:src/frontend/src/app/services/auth/AuthService.ts
 export class AuthService {
   constructor(
     private userRepository: IUserRepository,
@@ -18,78 +13,6 @@ export class AuthService {
   ) {}
 
   async login(request: LoginRequest): Promise<LoginResponse> {
-<<<<<<< HEAD:src/Web Interface for AURA Clinic (1)/src/app/services/auth/AuthService.ts
-    // Call backend API
-    const response = await fetch(`${API_URL}/auth/login`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        email: request.email,
-        password: request.password,
-      }),
-    });
-
-    if (!response.ok) {
-      if (response.status === 401) {
-        throw new Error('UNAUTHORIZED');
-      }
-      const errorData = await response.json();
-      throw new Error(errorData.error || 'Lỗi đăng nhập');
-    }
-
-    const data = await response.json();
-    
-    if (!data.success) {
-      throw new Error('UNAUTHORIZED');
-    }
-
-    // Return LoginResponse from backend
-    return {
-      accessToken: data.data.accessToken,
-      refreshToken: data.data.refreshToken,
-      roles: data.data.roles,
-      user: data.data.user,
-    };
-  }
-
-  async register(email: string, password: string, fullName: string): Promise<LoginResponse> {
-    // Call backend API
-    const response = await fetch(`${API_URL}/auth/register`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        email,
-        password,
-        fullName,
-      }),
-    });
-
-    if (!response.ok) {
-      if (response.status === 400) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Lỗi đăng ký');
-      }
-      const errorData = await response.json();
-      throw new Error(errorData.error || 'Lỗi đăng ký');
-    }
-
-    const data = await response.json();
-    
-    if (!data.success) {
-      throw new Error('Lỗi đăng ký');
-    }
-
-    // Return LoginResponse from backend
-    return {
-      accessToken: data.data.accessToken,
-      refreshToken: data.data.refreshToken,
-      roles: data.data.roles,
-      user: data.data.user,
-=======
     // Step 1: IUserRepository.findByEmail(email)
     const user = await this.userRepository.findByEmail(request.email);
     
@@ -130,7 +53,6 @@ export class AuthService {
       refreshToken,
       roles,
       user: userInfo,
->>>>>>> efcb8ba60e63834eb9db130be1617615df418b0d:src/frontend/src/app/services/auth/AuthService.ts
     };
   }
 

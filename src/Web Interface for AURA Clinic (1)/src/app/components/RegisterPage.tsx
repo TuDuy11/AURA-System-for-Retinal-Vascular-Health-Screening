@@ -6,12 +6,8 @@ import { Label } from './ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
-<<<<<<< HEAD:src/Web Interface for AURA Clinic (1)/src/app/components/RegisterPage.tsx
-const logoImage = 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 200 200%22%3E%3Crect fill=%22%234f46e5%22 width=%22200%22 height=%22200%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22white%22 font-size=%2248%22 font-weight=%22bold%22%3EAURA%3C/text%3E%3C/svg%3E';
-=======
-import logoImage from 'figma:asset/bc4a6196f2ea60ceb4bf7a5ed0a8563545e7d16f.png';
->>>>>>> efcb8ba60e63834eb9db130be1617615df418b0d:src/frontend/src/app/components/RegisterPage.tsx
 import { LoginResponse } from '@/app/services/auth/types';
+import { logoImage } from '../assets/images';
 
 interface RegisterPageProps {
   onBackToLogin: () => void;
@@ -42,13 +38,6 @@ interface DoctorFormData {
 export function RegisterPage({ onBackToLogin, onRegisterSuccess }: RegisterPageProps) {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-<<<<<<< HEAD:src/Web Interface for AURA Clinic (1)/src/app/components/RegisterPage.tsx
-  const [patientLoading, setPatientLoading] = useState(false);
-  const [patientError, setPatientError] = useState('');
-  const [doctorLoading, setDoctorLoading] = useState(false);
-  const [doctorError, setDoctorError] = useState('');
-=======
->>>>>>> efcb8ba60e63834eb9db130be1617615df418b0d:src/frontend/src/app/components/RegisterPage.tsx
   
   const [patientForm, setPatientForm] = useState<PatientFormData>({
     fullName: '',
@@ -121,113 +110,6 @@ export function RegisterPage({ onBackToLogin, onRegisterSuccess }: RegisterPageP
     return true;
   };
 
-<<<<<<< HEAD:src/Web Interface for AURA Clinic (1)/src/app/components/RegisterPage.tsx
-  const handlePatientRegister = async () => {
-    if (!validatePatientForm()) return;
-
-    try {
-      setPatientLoading(true);
-      setPatientError('');
-
-      // Gọi API backend trực tiếp
-      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:9999/api';
-      const response = await fetch(`${API_URL}/auth/register`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: patientForm.email,
-          password: patientForm.password,
-          fullName: patientForm.fullName,
-        }),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Lỗi đăng ký');
-      }
-
-      const data = await response.json();
-      
-      if (!data.success) {
-        throw new Error(data.error || 'Lỗi đăng ký');
-      }
-
-      // Success
-      setPatientLoading(false);
-      onRegisterSuccess('patient', data.data.user.id, {
-        accessToken: data.data.accessToken,
-        refreshToken: data.data.refreshToken,
-        user: data.data.user,
-        roles: data.data.roles,
-      });
-    } catch (error) {
-      setPatientLoading(false);
-      if (error instanceof Error) {
-        if (error.message.includes('Email')) {
-          setPatientError('Email này đã được đăng ký');
-        } else {
-          setPatientError(error.message);
-        }
-      } else {
-        setPatientError('Có lỗi xảy ra. Vui lòng thử lại.');
-      }
-    }
-  };
-
-  const handleDoctorRegister = async () => {
-    if (!validateDoctorForm()) return;
-
-    try {
-      setDoctorLoading(true);
-      setDoctorError('');
-
-      // Gọi API backend trực tiếp
-      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:9999/api';
-      const response = await fetch(`${API_URL}/auth/register`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: doctorForm.email,
-          password: doctorForm.password,
-          fullName: doctorForm.fullName,
-        }),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Lỗi đăng ký');
-      }
-
-      const data = await response.json();
-      
-      if (!data.success) {
-        throw new Error(data.error || 'Lỗi đăng ký');
-      }
-
-      // Success
-      setDoctorLoading(false);
-      onRegisterSuccess('doctor', data.data.user.id, {
-        accessToken: data.data.accessToken,
-        refreshToken: data.data.refreshToken,
-        user: data.data.user,
-        roles: data.data.roles,
-      });
-    } catch (error) {
-      setDoctorLoading(false);
-      if (error instanceof Error) {
-        if (error.message.includes('Email')) {
-          setDoctorError('Email này đã được đăng ký');
-        } else {
-          setDoctorError(error.message);
-        }
-      } else {
-        setDoctorError('Có lỗi xảy ra. Vui lòng thử lại.');
-      }
-=======
   const handlePatientRegister = () => {
     if (!validatePatientForm()) return;
 
@@ -301,7 +183,6 @@ export function RegisterPage({ onBackToLogin, onRegisterSuccess }: RegisterPageP
     } catch (error) {
       console.error('Error registering doctor:', error);
       alert('Có lỗi xảy ra. Vui lòng thử lại.');
->>>>>>> efcb8ba60e63834eb9db130be1617615df418b0d:src/frontend/src/app/components/RegisterPage.tsx
     }
   };
 
@@ -486,22 +367,6 @@ export function RegisterPage({ onBackToLogin, onRegisterSuccess }: RegisterPageP
                   </div>
                 </div>
 
-<<<<<<< HEAD:src/Web Interface for AURA Clinic (1)/src/app/components/RegisterPage.tsx
-                {patientError && (
-                  <div className="p-3 bg-red-50 border border-red-200 rounded text-red-700 text-sm">
-                    {patientError}
-                  </div>
-                )}
-
-                <Button
-                  onClick={handlePatientRegister}
-                  disabled={patientLoading}
-                  className="w-full bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 text-white shadow-lg disabled:opacity-50"
-                  size="lg"
-                >
-                  {patientLoading ? 'Đang đăng ký...' : 'Đăng ký tài khoản'}
-                  {!patientLoading && <UserCircle2 className="w-4 h-4 ml-2" />}
-=======
                 <Button
                   onClick={handlePatientRegister}
                   className="w-full bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 text-white shadow-lg"
@@ -509,7 +374,6 @@ export function RegisterPage({ onBackToLogin, onRegisterSuccess }: RegisterPageP
                 >
                   <UserCircle2 className="w-4 h-4 mr-2" />
                   Đăng ký tài khoản
->>>>>>> efcb8ba60e63834eb9db130be1617615df418b0d:src/frontend/src/app/components/RegisterPage.tsx
                 </Button>
               </TabsContent>
 
@@ -655,22 +519,6 @@ export function RegisterPage({ onBackToLogin, onRegisterSuccess }: RegisterPageP
                   <strong>Lưu ý:</strong> Tài khoản bác sĩ cần được xác thực trước khi sử dụng đầy đủ tính năng.
                 </div>
 
-<<<<<<< HEAD:src/Web Interface for AURA Clinic (1)/src/app/components/RegisterPage.tsx
-                {doctorError && (
-                  <div className="p-3 bg-red-50 border border-red-200 rounded text-red-700 text-sm">
-                    {doctorError}
-                  </div>
-                )}
-
-                <Button
-                  onClick={handleDoctorRegister}
-                  disabled={doctorLoading}
-                  className="w-full bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 text-white shadow-lg disabled:opacity-50"
-                  size="lg"
-                >
-                  {doctorLoading ? 'Đang đăng ký...' : 'Đăng ký tài khoản'}
-                  {!doctorLoading && <Stethoscope className="w-4 h-4 ml-2" />}
-=======
                 <Button
                   onClick={handleDoctorRegister}
                   className="w-full bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 text-white shadow-lg"
@@ -678,7 +526,6 @@ export function RegisterPage({ onBackToLogin, onRegisterSuccess }: RegisterPageP
                 >
                   <Stethoscope className="w-4 h-4 mr-2" />
                   Đăng ký tài khoản
->>>>>>> efcb8ba60e63834eb9db130be1617615df418b0d:src/frontend/src/app/components/RegisterPage.tsx
                 </Button>
               </TabsContent>
             </Tabs>
@@ -697,3 +544,4 @@ export function RegisterPage({ onBackToLogin, onRegisterSuccess }: RegisterPageP
     </div>
   );
 }
+

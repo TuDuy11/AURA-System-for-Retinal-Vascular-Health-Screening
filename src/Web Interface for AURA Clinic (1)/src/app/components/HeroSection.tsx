@@ -1,10 +1,5 @@
 import { Button } from './ui/button';
-<<<<<<< HEAD:src/Web Interface for AURA Clinic (1)/src/app/components/HeroSection.tsx
-const heroImage = 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 800 400%22%3E%3Cdefs%3E%3ClinearGradient id=%22grad%22 x1=%220%25%22 y1=%220%25%22 x2=%22100%25%22 y2=%22100%25%22%3E%3Cstop offset=%220%25%22 style=%22stop-color:%234f46e5;stop-opacity:1%22 /%3E%3Cstop offset=%22100%25%22 style=%22stop-color:%238b5cf6;stop-opacity:1%22 /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect fill=%22url(%23grad)%22 width=%22800%22 height=%22400%22/%3E%3C/svg%3E';
-=======
-import heroImage from 'figma:asset/3dbddd19bff7a97abe8ff2afeebce42be3a11c3f.png';
->>>>>>> efcb8ba60e63834eb9db130be1617615df418b0d:src/frontend/src/app/components/HeroSection.tsx
-
+import { heroImage } from '../assets/images';
 export function HeroSection() {
   const scrollToAppointment = () => {
     const element = document.getElementById('appointment');
@@ -155,3 +150,4 @@ export function HeroSection() {
     </section>
   );
 }
+
