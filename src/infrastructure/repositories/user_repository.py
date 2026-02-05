@@ -38,6 +38,16 @@ class UserRepository:
     
     def create(self, email: str, password_hash: str, full_name: str = None) -> dict:
         """Tạo user mới"""
+        print(f"[SYSTEM LOG] Processing registration for email: {email}")
+        user = UserModel(
+        id=uuid4(),
+        email=email,
+        password_hash=password_hash,
+        full_name=full_name,
+        is_active=True
+    )
+        self.session.add(user)
+        self.session.commit()
         user = UserModel(
             id=uuid4(),
             email=email,
