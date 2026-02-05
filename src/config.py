@@ -12,21 +12,40 @@ class Config:
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URI') or 'sqlite:///aura.db'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     CORS_HEADERS = 'Content-Type'
+    
+    # CORS Configuration
+    CORS_ALLOWED_ORIGINS = os.environ.get('CORS_ALLOWED_ORIGINS', 'http://localhost:5173,http://localhost:3000').split(',')
+    CORS_ALLOWED_METHODS = ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH', 'HEAD']
+    CORS_ALLOWED_HEADERS = ['Content-Type', 'Authorization', 'X-Requested-With']
+    CORS_MAX_AGE = int(os.environ.get('CORS_MAX_AGE', 3600))
+    CORS_ALLOW_CREDENTIALS = True
 
 class DevelopmentConfig(Config):
     """Development configuration."""
     DEBUG = True
     SQLALCHEMY_DATABASE_URI = 'sqlite:///aura.db'
+    # Cho phép tất cả localhost origins trong development
+    CORS_ALLOWED_ORIGINS = os.environ.get(
+        'CORS_ALLOWED_ORIGINS', 
+        'http://localhost:5173,http://localhost:3000,http://localhost:8000,http://127.0.0.1:5173,http://127.0.0.1:3000'
+    ).split(',')
 
 class TestingConfig(Config):
     """Testing configuration."""
     TESTING = True
     SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory:'
+    CORS_ALLOWED_ORIGINS = ['http://localhost:5173', 'http://localhost:3000']
 
 class ProductionConfig(Config):
     """Production configuration."""
     DEBUG = False
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URI') or 'sqlite:///aura.db'
+    # Production: Chỉ cho phép specific domains từ environment variable
+    CORS_ALLOWED_ORIGINS = os.environ.get(
+        'CORS_ALLOWED_ORIGINS', 
+        'https://aura-clinic.com,https://www.aura-clinic.com'
+    ).split(',')
+    CORS_MAX_AGE = 7200  # 2 hours cho production
 
 class SwaggerConfig:
     """Swagger configuration."""
