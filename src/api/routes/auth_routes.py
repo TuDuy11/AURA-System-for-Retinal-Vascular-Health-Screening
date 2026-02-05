@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify
 from infrastructure.repositories.user_repository import UserRepository
 from infrastructure.databases.mssql import SessionLocal, init_mssql
+from api.validators import validate_email, validate_password, validate_login_request, validate_register_request
 import jwt
 import os
 import bcrypt
@@ -16,6 +17,51 @@ def hash_password(password: str) -> str:
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     """Kiểm tra mật khẩu"""
     return bcrypt.checkpw(plain_password.encode('utf-8'), hashed_password.encode('utf-8'))
+
+def get_secret_key() -> str:
+    """
+    Get JWT secret key from environment
+    Raises error if not set in production
+    """
+    secret_key = os.getenv("SECRET_KEY")
+    if not secret_key:
+        env = os.getenv("FLASK_ENV", "development")
+        if env == "production":
+            raise ValueError("SECRET_KEY must be set in environment for production")
+        secret_key = "your-secret-key-change-in-production"  # Default for dev
+    return secret_key
+
+def verify_token_from_header(auth_header: str) -> tuple:
+    """
+    Verify JWT token from Authorization header
+    
+    Args:
+        auth_header: Authorization header value
+        
+    Returns:
+        Tuple of (payload_dict or None, error_message or None, status_code)
+    """
+    if not auth_header:
+        return None, "Token không được cung cấp", 401
+    
+    try:
+        # Extract token from "Bearer {token}" format
+        parts = auth_header.split(" ")
+        if len(parts) != 2 or parts[0].lower() != "bearer":
+            return None, "Invalid authorization header format", 400
+        
+        token = parts[1]
+        secret_key = get_secret_key()
+        
+        payload = jwt.decode(token, secret_key, algorithms=["HS256"])
+        return payload, None, 200
+        
+    except jwt.ExpiredSignatureError:
+        return None, "Token đã hết hạn", 401
+    except jwt.InvalidTokenError as e:
+        return None, f"Token không hợp lệ: {str(e)}", 401
+    except Exception as e:
+        return None, f"Lỗi xác minh token: {str(e)}", 500
 
 # Khởi tạo database (tạo bảng nếu chưa có)
 try:
@@ -72,7 +118,7 @@ def login():
     Request body:
     {
         "email": "patient@example.com",
-        "password": "123456"
+        "password": "Password123"
     }
     
     Response:
@@ -96,17 +142,18 @@ def login():
     user_repo = UserRepository(session)
     
     try:
-        # Lấy dữ liệu từ request
-        data = request.get_json()
-        email = data.get("email")
-        password = data.get("password")
-        
-        # Kiểm tra input
-        if not email or not password:
+        # Validate request
+        data = request.get_json() or {}
+        is_valid, error = validate_login_request(data)
+        if not is_valid:
             return jsonify({
                 "success": False,
-                "error": "Email và mật khẩu là bắt buộc"
+                "error": error
             }), 400
+        
+        # Lấy dữ liệu từ request
+        email = data.get("email", "").strip()
+        password = data.get("password")
         
         # Tìm user trong database
         user_data = user_repo.find_by_email(email)
@@ -124,6 +171,7 @@ def login():
             }), 401
         
         # Tạo JWT token
+        secret_key = get_secret_key()
         payload = {
             "user_id": user_data["id"],
             "email": user_data["email"],
@@ -131,7 +179,6 @@ def login():
             "exp": (datetime.utcnow() + timedelta(hours=24)).timestamp()
         }
         
-        secret_key = os.getenv("SECRET_KEY", "your-secret-key-change-in-production")
         access_token = jwt.encode(payload, secret_key, algorithm="HS256")
         refresh_token = jwt.encode({**payload, "exp": (datetime.utcnow() + timedelta(days=7)).timestamp()}, secret_key, algorithm="HS256")
         
@@ -195,7 +242,7 @@ def register():
     Request body:
     {
         "email": "user@example.com",
-        "password": "password123",
+        "password": "Password123",
         "fullName": "Tên người dùng"
     }
     
@@ -220,18 +267,19 @@ def register():
     user_repo = UserRepository(session)
     
     try:
-        # Lấy dữ liệu từ request
-        data = request.get_json()
-        email = data.get("email")
-        password = data.get("password")
-        full_name = data.get("fullName")
-        
-        # Kiểm tra input
-        if not email or not password:
+        # Validate request
+        data = request.get_json() or {}
+        is_valid, error = validate_register_request(data)
+        if not is_valid:
             return jsonify({
                 "success": False,
-                "error": "Email và mật khẩu là bắt buộc"
+                "error": error
             }), 400
+        
+        # Lấy dữ liệu từ request
+        email = data.get("email", "").strip()
+        password = data.get("password")
+        full_name = data.get("fullName", "").strip() if data.get("fullName") else None
         
         # Kiểm tra email đã tồn tại hay chưa
         existing_user = user_repo.find_by_email(email)
@@ -239,13 +287,6 @@ def register():
             return jsonify({
                 "success": False,
                 "error": "Email này đã được đăng ký"
-            }), 400
-        
-        # Kiểm tra độ dài mật khẩu
-        if len(password) < 6:
-            return jsonify({
-                "success": False,
-                "error": "Mật khẩu phải có ít nhất 6 ký tự"
             }), 400
         
         # Mã hóa mật khẩu
@@ -259,6 +300,7 @@ def register():
         )
         
         # Tạo JWT token
+        secret_key = get_secret_key()
         payload = {
             "user_id": new_user["id"],
             "email": new_user["email"],
@@ -266,7 +308,6 @@ def register():
             "exp": (datetime.utcnow() + timedelta(hours=24)).timestamp()
         }
         
-        secret_key = os.getenv("SECRET_KEY", "your-secret-key-change-in-production")
         access_token = jwt.encode(payload, secret_key, algorithm="HS256")
         refresh_token = jwt.encode({**payload, "exp": (datetime.utcnow() + timedelta(days=7)).timestamp()}, secret_key, algorithm="HS256")
         
@@ -306,40 +347,205 @@ def register():
 def verify_token():
     """
     Endpoint xác minh token
+    
+    Headers:
+    {
+        "Authorization": "Bearer {token}"
+    }
+    
+    Response:
+    {
+        "success": true,
+        "data": {
+            "user_id": "uuid",
+            "email": "user@example.com",
+            "iat": timestamp,
+            "exp": timestamp
+        }
+    }
     """
     try:
-        # Lấy token từ header
-        auth_header = request.headers.get("Authorization")
-        if not auth_header:
-            return jsonify({
-                "success": False,
-                "error": "Token không được cung cấp"
-            }), 401
+        auth_header = request.headers.get("Authorization", "")
+        payload, error, status_code = verify_token_from_header(auth_header)
         
-        # Extract token
-        token = auth_header.split(" ")[1] if " " in auth_header else auth_header
+        if error:
+            return jsonify({
+                "success": False,
+                "error": error
+            }), status_code
         
-        # Xác minh token
-        secret_key = os.getenv("SECRET_KEY", "your-secret-key-change-in-production")
-        try:
-            payload = jwt.decode(token, secret_key, algorithms=["HS256"])
-            return jsonify({
-                "success": True,
-                "data": payload
-            }), 200
-        except jwt.ExpiredSignatureError:
-            return jsonify({
-                "success": False,
-                "error": "Token đã hết hạn"
-            }), 401
-        except jwt.InvalidTokenError:
-            return jsonify({
-                "success": False,
-                "error": "Token không hợp lệ"
-            }), 401
+        return jsonify({
+            "success": True,
+            "data": payload
+        }), 200
     
     except Exception as e:
         return jsonify({
             "success": False,
             "error": str(e)
         }), 500
+
+
+@auth_bp.get("/me")
+def get_current_user():
+    """
+    Get current logged-in user information
+    
+    Headers:
+    {
+        "Authorization": "Bearer {accessToken}"
+    }
+    
+    Response:
+    {
+        "success": true,
+        "data": {
+            "id": "uuid",
+            "email": "user@example.com",
+            "fullName": "User Name",
+            "avatar": "avatar_url",
+            "roles": [
+                {"id": "uuid", "name": "PATIENT"}
+            ]
+        }
+    }
+    """
+    session = SessionLocal()
+    user_repo = UserRepository(session)
+    
+    try:
+        auth_header = request.headers.get("Authorization", "")
+        payload, error, status_code = verify_token_from_header(auth_header)
+        
+        if error:
+            return jsonify({
+                "success": False,
+                "error": error
+            }), status_code
+        
+        # Get user from database
+        user_id = payload.get("user_id")
+        email = payload.get("email")
+        
+        user_data = user_repo.find_by_email(email)
+        if not user_data:
+            return jsonify({
+                "success": False,
+                "error": "Không tìm thấy người dùng"
+            }), 404
+        
+        # Determine role based on email
+        role = "PATIENT"
+        if "doctor" in email.lower():
+            role = "DOCTOR"
+        elif "admin" in email.lower():
+            role = "ADMIN"
+        
+        return jsonify({
+            "success": True,
+            "data": {
+                "id": user_data["id"],
+                "email": user_data["email"],
+                "fullName": user_data["full_name"],
+                "avatar": f"https://api.dicebear.com/7.x/avataaars/svg?seed={user_data['email']}",
+                "roles": [
+                    {
+                        "id": user_data["id"],
+                        "name": role
+                    }
+                ]
+            }
+        }), 200
+    
+    except Exception as e:
+        return jsonify({
+            "success": False,
+            "error": str(e)
+        }), 500
+    finally:
+        user_repo.close()
+
+
+@auth_bp.post("/refresh")
+def refresh_access_token():
+    """
+    Refresh access token using refresh token
+    
+    Request body:
+    {
+        "refreshToken": "refresh_token_value"
+    }
+    
+    Response:
+    {
+        "success": true,
+        "data": {
+            "accessToken": "new_access_token",
+            "expiresIn": 86400
+        }
+    }
+    """
+    session = SessionLocal()
+    user_repo = UserRepository(session)
+    
+    try:
+        data = request.get_json() or {}
+        refresh_token = data.get("refreshToken")
+        
+        if not refresh_token:
+            return jsonify({
+                "success": False,
+                "error": "refreshToken là bắt buộc"
+            }), 400
+        
+        # Verify refresh token
+        secret_key = get_secret_key()
+        try:
+            payload = jwt.decode(refresh_token, secret_key, algorithms=["HS256"])
+        except jwt.ExpiredSignatureError:
+            return jsonify({
+                "success": False,
+                "error": "Refresh token đã hết hạn"
+            }), 401
+        except jwt.InvalidTokenError:
+            return jsonify({
+                "success": False,
+                "error": "Refresh token không hợp lệ"
+            }), 401
+        
+        # Verify user still exists
+        user_id = payload.get("user_id")
+        email = payload.get("email")
+        user_data = user_repo.find_by_email(email)
+        
+        if not user_data:
+            return jsonify({
+                "success": False,
+                "error": "Người dùng không tồn tại"
+            }), 404
+        
+        # Generate new access token
+        new_payload = {
+            "user_id": user_id,
+            "email": email,
+            "iat": datetime.utcnow().timestamp(),
+            "exp": (datetime.utcnow() + timedelta(hours=24)).timestamp()
+        }
+        
+        new_access_token = jwt.encode(new_payload, secret_key, algorithm="HS256")
+        
+        return jsonify({
+            "success": True,
+            "data": {
+                "accessToken": new_access_token,
+                "expiresIn": 86400  # 24 hours in seconds
+            }
+        }), 200
+    
+    except Exception as e:
+        return jsonify({
+            "success": False,
+            "error": str(e)
+        }), 500
+    finally:
+        user_repo.close()
