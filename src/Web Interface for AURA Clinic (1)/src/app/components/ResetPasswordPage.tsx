@@ -38,13 +38,32 @@ export function ResetPasswordPage({ email, onResetSuccess, onBackToLogin }: Rese
     return true;
   };
 
-  const handleResetPassword = () => {
+  const handleResetPassword = async () => {
     if (!validatePassword()) return;
 
     setIsLoading(true);
 
-    // Simulate API call
-    setTimeout(() => {
+    try {
+      const response = await fetch('/api/auth/reset-password', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: email,
+          newPassword: password,
+          confirmPassword: confirmPassword
+        })
+      });
+
+      const data = await response.json();
+
+      if (!response.ok || !data.success) {
+        alert(data.error || 'Không thể đặt lại mật khẩu');
+        setIsLoading(false);
+        return;
+      }
+
       setIsLoading(false);
       setIsSuccess(true);
       
@@ -52,7 +71,10 @@ export function ResetPasswordPage({ email, onResetSuccess, onBackToLogin }: Rese
       setTimeout(() => {
         onResetSuccess();
       }, 2000);
-    }, 1500);
+    } catch (error) {
+      alert('Lỗi kết nối: ' + (error as Error).message);
+      setIsLoading(false);
+    }
   };
 
   if (isSuccess) {

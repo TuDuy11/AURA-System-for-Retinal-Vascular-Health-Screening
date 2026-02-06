@@ -1,6 +1,6 @@
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, g
 from sqlalchemy import text
-from infrastructure.databases.mssql import get_db_session
+from infrastructure.databases.mssql import get_request_db_session
 
 health_bp = Blueprint("health", __name__)
 
@@ -20,9 +20,8 @@ def health_check():
     db_ok = False
     db_error = None
     try:
-        session = get_db_session()
+        session = get_request_db_session()
         session.execute(text("SELECT 1"))
-        session.close()
         db_ok = True
     except Exception as e:
         db_error = str(e)

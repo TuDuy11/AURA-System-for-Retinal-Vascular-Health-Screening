@@ -24,7 +24,7 @@ from infrastructure.models.roles_model import RoleModel
 from infrastructure.models.notification_model import NotificationModel
 from infrastructure.models.auth_identity_model import AuthIdentityModel
 from infrastructure.databases.base import Base
-from infrastructure.databases.mssql import engine, SessionLocal
+from infrastructure.databases.mssql import engine, SessionFactory
 from infrastructure.repositories.user_repository import UserRepository
 from infrastructure.repositories.email_verification_token_repository import EmailVerificationTokenRepository
 from api.validators import (
@@ -186,7 +186,7 @@ class TestEmailVerificationTokenRepository:
         # Note: Full repository testing with UserModel requires Flask app context
         # due to SQLAlchemy mapper dependencies. These tests are better done as
         # integration tests with the full Flask application running.
-        self.session = SessionLocal()
+        self.session = SessionFactory()
         self.token_repo = EmailVerificationTokenRepository(self.session)
         
         yield

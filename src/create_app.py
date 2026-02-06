@@ -57,6 +57,10 @@ def create_app(config_name='development'):
     validate_content_type(app)
     logger.info("✅ Middleware initialized")
                 
+    # Khởi tạo database với request-scoped session management
+    from infrastructure.databases.mssql import init_app as init_db_app
+    init_db_app(app)
+    
     try:
         register_error_handlers(app)   
     except Exception as e:

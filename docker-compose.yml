@@ -1,13 +1,65 @@
 services:
+  # PostgreSQL Database (PRODUCTION RECOMMENDED)
+  postgres:
+    image: postgres:15-alpine
+    container_name: aura_postgres
+    environment:
+      POSTGRES_USER: ${DB_USER:-aura_user}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-aura_password}
+      POSTGRES_DB: ${DB_NAME:-aura_db}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-aura_user}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    # Only start in production - comment out for development
+    profiles:
+      - production
+
   api:
     build: .
-    image: aura-bacykend
+    image: aura-backend
     ports:
       - "9999:9999"
     environment:
-      DB_PATH: /app/src/aura.db
+      # Database - uses .env file for configuration
+      # For development: SQLite (DATABASE_URI in .env)
+      # For production: PostgreSQL (DB_* variables or DATABASE_URI in .env.production)
+      - DATABASE_URI
+      - DB_ENGINE
+      - DB_HOST
+      - DB_PORT
+      - DB_NAME
+      - DB_USER
+      - DB_PASSWORD
+      # Flask configuration
+      - FLASK_ENV=${FLASK_ENV:-production}
+      - FLASK_DEBUG=${FLASK_DEBUG:-False}
+      # WSGI Server (Gunicorn)
+      - WORKERS=${WORKERS:-4}
+      - THREADS=${THREADS:-2}
+      - TIMEOUT=${TIMEOUT:-60}
     volumes:
+      # For SQLite: mount database file (if not using PostgreSQL)
       - ./src/aura.db:/app/src/aura.db
+      # For logs (optional)
+      - ./logs:/app/logs
+    depends_on:
+      postgres:
+        condition: service_healthy
+        required: false
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9999/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped
 
   frontend:
     build:
@@ -22,3 +74,7 @@ services:
       - VITE_API_URL=http://api:9999/api
     depends_on:
       - api
+
+# Volumes for persistent data (PostgreSQL)
+volumes:
+  postgres_data:
