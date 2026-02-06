@@ -4,6 +4,8 @@ gunicorn
 SQLAlchemy
 waitress
 
+pytest
+
 
 
 

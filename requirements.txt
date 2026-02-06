@@ -8,6 +8,7 @@ flask-sqlalchemy
 python-dotenv
 PyJWT
 bcrypt
+pytest
 
 
 
