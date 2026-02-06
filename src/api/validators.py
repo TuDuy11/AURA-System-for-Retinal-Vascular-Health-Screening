@@ -154,3 +154,62 @@ def validate_register_request(data: dict) -> Tuple[bool, Optional[str]]:
             return False, error
     
     return True, None
+
+
+def validate_payment_request(data: dict) -> Tuple[bool, Optional[str]]:
+    """
+    Validate create payment request body
+    
+    Args:
+        data: Request body dictionary
+        
+    Returns:
+        Tuple of (is_valid, error_message)
+    """
+    if not data or not isinstance(data, dict):
+        return False, "Request body không hợp lệ"
+    
+    amount = data.get("amount")
+    method = data.get("method", "momo")
+    
+    if amount is None:
+        return False, "Số tiền là bắt buộc"
+    
+    try:
+        amount = float(amount)
+        if amount <= 0:
+            return False, "Số tiền phải lớn hơn 0"
+        if amount > 999999999999:
+            return False, "Số tiền quá lớn"
+    except (TypeError, ValueError):
+        return False, "Số tiền phải là số hợp lệ"
+    
+    valid_methods = ["momo", "vnpay", "cash"]
+    if method not in valid_methods:
+        return False, f"Phương thức thanh toán không hợp lệ. Các phương thức hợp lệ: {', '.join(valid_methods)}"
+    
+    return True, None
+
+
+def validate_process_payment_request(data: dict) -> Tuple[bool, Optional[str]]:
+    """
+    Validate process payment request body
+    
+    Args:
+        data: Request body dictionary
+        
+    Returns:
+        Tuple of (is_valid, error_message)
+    """
+    if not data or not isinstance(data, dict):
+        return False, "Request body không hợp lệ"
+    
+    transaction_code = data.get("transaction_code", "").strip() if data.get("transaction_code") else ""
+    
+    if not transaction_code:
+        return False, "Mã giao dịch là bắt buộc"
+    
+    if len(transaction_code) > 100:
+        return False, "Mã giao dịch quá dài"
+    
+    return True, None
