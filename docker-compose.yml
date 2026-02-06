@@ -1,7 +1,7 @@
 services:
   api:
     build: .
-    image: aura-backend
+    image: aura-bacykend
     ports:
       - "9999:9999"
     environment:

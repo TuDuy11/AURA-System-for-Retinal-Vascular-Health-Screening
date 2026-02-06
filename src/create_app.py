@@ -2,7 +2,7 @@ from flask import Flask, send_from_directory
 from config import Config, DevelopmentConfig, ProductionConfig, TestingConfig
 from cors import init_cors
 from error_handler import register_error_handlers
-from infrastructure.databases import init_db, db
+from infrastructure.databases.mssql import init_mssql
 from api.routes import register_routes
 from api.middleware import setup_request_logging, validate_content_type
 import logging

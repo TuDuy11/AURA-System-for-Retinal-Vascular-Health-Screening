@@ -1,7 +1,9 @@
 from flask import Blueprint, request, jsonify
 from infrastructure.repositories.user_repository import UserRepository
+from infrastructure.repositories.email_verification_token_repository import EmailVerificationTokenRepository
 from infrastructure.databases.mssql import SessionLocal, init_mssql
-from api.validators import validate_email, validate_password, validate_login_request, validate_register_request
+from api.validators import validate_email, validate_password, validate_login_request, validate_register_request, validate_email_verification_token, validate_resend_verification_email_request
+from services.email_service import email_service
 import jwt
 import os
 import bcrypt
@@ -549,3 +551,239 @@ def refresh_access_token():
         }), 500
     finally:
         user_repo.close()
+
+
+@auth_bp.post("/send-verification-email")
+def send_verification_email_endpoint():
+    """
+    Send verification email to user after registration
+    
+    Request body:
+    {
+        "userId": "uuid"
+    }
+    
+    Response:
+    {
+        "success": true,
+        "message": "Email xác nhận đã được gửi"
+    }
+    """
+    session = SessionLocal()
+    user_repo = UserRepository(session)
+    token_repo = EmailVerificationTokenRepository(session)
+    
+    try:
+        data = request.get_json() or {}
+        user_id = data.get("userId")
+        
+        if not user_id:
+            return jsonify({
+                "success": False,
+                "error": "userId là bắt buộc"
+            }), 400
+        
+        # Find user
+        user_data = user_repo.find_by_id(user_id)
+        if not user_data:
+            return jsonify({
+                "success": False,
+                "error": "Người dùng không tồn tại"
+            }), 404
+        
+        # Check if email already verified
+        if user_data.get("email_verified"):
+            return jsonify({
+                "success": False,
+                "error": "Email đã được xác nhận"
+            }), 400
+        
+        # Invalidate previous tokens
+        token_repo.invalidate_user_tokens(user_id)
+        
+        # Create verification token
+        verification_token = token_repo.create_token(user_id)
+        
+        # Send verification email
+        email_sent = email_service.send_verification_email(
+            recipient_email=user_data["email"],
+            verification_token=verification_token,
+            full_name=user_data.get("full_name")
+        )
+        
+        if not email_sent:
+            return jsonify({
+                "success": False,
+                "error": "Không thể gửi email xác nhận"
+            }), 500
+        
+        return jsonify({
+            "success": True,
+            "message": "Email xác nhận đã được gửi"
+        }), 200
+    
+    except Exception as e:
+        return jsonify({
+            "success": False,
+            "error": str(e)
+        }), 500
+    finally:
+        session.close()
+
+
+@auth_bp.post("/verify-email")
+def verify_email_endpoint():
+    """
+    Verify email address with verification token
+    
+    Request body:
+    {
+        "token": "verification_token"
+    }
+    
+    Response:
+    {
+        "success": true,
+        "message": "Email đã được xác nhận thành công"
+    }
+    """
+    session = SessionLocal()
+    user_repo = UserRepository(session)
+    token_repo = EmailVerificationTokenRepository(session)
+    
+    try:
+        data = request.get_json() or {}
+        
+        # Validate request
+        is_valid, error = validate_email_verification_token(data)
+        if not is_valid:
+            return jsonify({
+                "success": False,
+                "error": error
+            }), 400
+        
+        token = data.get("token")
+        
+        # Get token record
+        token_record = token_repo.get_token_by_token(token)
+        if not token_record:
+            return jsonify({
+                "success": False,
+                "error": "Token xác nhận không hợp lệ"
+            }), 400
+        
+        # Check if token is valid
+        if not token_record.is_valid():
+            if token_record.is_used:
+                return jsonify({
+                    "success": False,
+                    "error": "Token xác nhận đã được sử dụng"
+                }), 400
+            else:
+                return jsonify({
+                    "success": False,
+                    "error": "Token xác nhận đã hết hạn"
+                }), 400
+        
+        # Update user email_verified
+        user_id = token_record.user_id
+        user_repo.update_email_verified(user_id)
+        
+        # Mark token as used
+        token_repo.verify_token(token)
+        
+        return jsonify({
+            "success": True,
+            "message": "Email đã được xác nhận thành công"
+        }), 200
+    
+    except Exception as e:
+        return jsonify({
+            "success": False,
+            "error": str(e)
+        }), 500
+    finally:
+        session.close()
+
+
+@auth_bp.post("/resend-verification-email")
+def resend_verification_email_endpoint():
+    """
+    Resend verification email to user
+    
+    Request body:
+    {
+        "email": "user@example.com"
+    }
+    
+    Response:
+    {
+        "success": true,
+        "message": "Email xác nhận đã được gửi lại"
+    }
+    """
+    session = SessionLocal()
+    user_repo = UserRepository(session)
+    token_repo = EmailVerificationTokenRepository(session)
+    
+    try:
+        data = request.get_json() or {}
+        
+        # Validate request
+        is_valid, error = validate_resend_verification_email_request(data)
+        if not is_valid:
+            return jsonify({
+                "success": False,
+                "error": error
+            }), 400
+        
+        email = data.get("email").strip()
+        
+        # Find user by email
+        user_data = user_repo.find_by_email(email)
+        if not user_data:
+            # Don't reveal if email exists for security
+            return jsonify({
+                "success": True,
+                "message": "Nếu email tồn tại, email xác nhận sẽ được gửi"
+            }), 200
+        
+        # Check if email already verified
+        if user_data.get("email_verified"):
+            return jsonify({
+                "success": False,
+                "error": "Email đã được xác nhận"
+            }), 400
+        
+        # Invalidate previous tokens
+        token_repo.invalidate_user_tokens(user_data["id"])
+        
+        # Create verification token
+        verification_token = token_repo.create_token(user_data["id"])
+        
+        # Send verification email
+        email_sent = email_service.send_verification_email(
+            recipient_email=user_data["email"],
+            verification_token=verification_token,
+            full_name=user_data.get("full_name")
+        )
+        
+        if not email_sent:
+            return jsonify({
+                "success": True,
+                "message": "Nếu email tồn tại, email xác nhận sẽ được gửi"
+            }), 200
+        
+        return jsonify({
+            "success": True,
+            "message": "Email xác nhận đã được gửi lại"
+        }), 200
+    
+    except Exception as e:
+        return jsonify({
+            "success": False,
+            "error": str(e)
+        }), 500
+    finally:
+        session.close()
+

@@ -2,6 +2,7 @@ from typing import Optional
 from infrastructure.models.user_model import UserModel
 from infrastructure.databases.mssql import SessionLocal
 from uuid import uuid4
+from datetime import datetime
 
 class UserRepository:
     """Repository để quản lý User trong database"""
@@ -19,7 +20,9 @@ class UserRepository:
                 "password_hash": user.password_hash,
                 "full_name": user.full_name,
                 "avatar_url": user.avatar_url,
-                "is_active": user.is_active
+                "is_active": user.is_active,
+                "email_verified": user.email_verified,
+                "email_verified_at": user.email_verified_at
             }
         return None
     
@@ -32,7 +35,9 @@ class UserRepository:
                 "email": user.email,
                 "full_name": user.full_name,
                 "avatar_url": user.avatar_url,
-                "is_active": user.is_active
+                "is_active": user.is_active,
+                "email_verified": user.email_verified,
+                "email_verified_at": user.email_verified_at
             }
         return None
     
@@ -44,16 +49,24 @@ class UserRepository:
         email=email,
         password_hash=password_hash,
         full_name=full_name,
-        is_active=True
+        is_active=True,
+        email_verified=False
     )
         self.session.add(user)
         self.session.commit()
         return {
             "id": str(user.id),
             "email": user.email,
-            "full_name": user.full_name
+            "full_name": user.full_name,
+            "email_verified": False
         }
     
-    def close(self):
-        """Đóng session"""
-        self.session.close()
+    def update_email_verified(self, user_id: str) -> bool:
+        """Cập nhật trạng thái email verified"""
+        user = self.session.query(UserModel).filter(UserModel.id == user_id).first()
+        if user:
+            user.email_verified = True
+            user.email_verified_at = datetime.utcnow()
+            self.session.commit()
+            return True
+        return False

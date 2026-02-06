@@ -154,3 +154,51 @@ def validate_register_request(data: dict) -> Tuple[bool, Optional[str]]:
             return False, error
     
     return True, None
+
+def validate_email_verification_token(data: dict) -> Tuple[bool, Optional[str]]:
+    """
+    Validate email verification token request
+    
+    Args:
+        data: Request body dictionary
+        
+    Returns:
+        Tuple of (is_valid, error_message)
+    """
+    if not data or not isinstance(data, dict):
+        return False, "Request body không hợp lệ"
+    
+    token = data.get("token", "").strip() if data.get("token") else ""
+    
+    if not token:
+        return False, "Token xác nhận là bắt buộc"
+    
+    if len(token) < 20:
+        return False, "Token không hợp lệ"
+    
+    return True, None
+
+
+def validate_resend_verification_email_request(data: dict) -> Tuple[bool, Optional[str]]:
+    """
+    Validate resend verification email request
+    
+    Args:
+        data: Request body dictionary
+        
+    Returns:
+        Tuple of (is_valid, error_message)
+    """
+    if not data or not isinstance(data, dict):
+        return False, "Request body không hợp lệ"
+    
+    email = data.get("email", "").strip() if data.get("email") else ""
+    
+    if not email:
+        return False, "Email là bắt buộc"
+    
+    is_valid, error = validate_email(email)
+    if not is_valid:
+        return False, error
+    
+    return True, None
