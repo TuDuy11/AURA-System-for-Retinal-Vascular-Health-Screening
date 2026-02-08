@@ -1,4 +1,5 @@
 from .user_repository import UserRepository
 from .payment_repository import PaymentRepository
+from .email_verification_token_repository import EmailVerificationTokenRepository
 
-__all__ = ['UserRepository', 'PaymentRepository']
+__all__ = ['UserRepository', 'PaymentRepository', 'EmailVerificationTokenRepository']

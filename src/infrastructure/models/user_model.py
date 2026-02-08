@@ -17,6 +17,10 @@ class UserModel(Base):
     phone = Column(String(100), nullable=True)
     avatar_url = Column(String(255), nullable=True)
 
+    # Email verification fields
+    email_verified = Column(Boolean, default=False)
+    email_verified_at = Column(DateTime, nullable=True)
+
     is_active = Column(Boolean, default=True)
     created_at = Column(DateTime, default=datetime.utcnow)
 

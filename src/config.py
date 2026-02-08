@@ -2,15 +2,40 @@
 
 import os
 
+def build_database_uri():
+    """Build database URI from environment variables."""
+    # Check if DATABASE_URI is explicitly set
+    if os.environ.get('DATABASE_URI'):
+        return os.environ.get('DATABASE_URI')
+    
+    # Try to build PostgreSQL URI from individual components
+    db_engine = os.environ.get('DB_ENGINE', 'sqlite')
+    
+    if db_engine.lower() == 'postgresql':
+        db_host = os.environ.get('DB_HOST', 'localhost')
+        db_port = os.environ.get('DB_PORT', '5432')
+        db_name = os.environ.get('DB_NAME', 'aura_db')
+        db_user = os.environ.get('DB_USER', 'postgres')
+        db_password = os.environ.get('DB_PASSWORD', '')
+        
+        uri = f"postgresql://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}"
+        return uri
+    
+    # Default to in-memory SQLite
+    return 'sqlite:///:memory:'
+
 class Config:
     """Base configuration."""
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'a_default_secret_key'
     DEBUG = os.environ.get('DEBUG', 'False').lower() in ['true', '1']
     TESTING = os.environ.get('TESTING', 'False').lower() in ['true', '1']
     
-    # SQLite for development (easy to use without external DB)
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URI') or 'sqlite:///aura.db'
+    # Database configuration - supports both SQLite and PostgreSQL
+    SQLALCHEMY_DATABASE_URI = build_database_uri()
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    SQLALCHEMY_POOL_SIZE = 10
+    SQLALCHEMY_POOL_RECYCLE = 3600
+    SQLALCHEMY_POOL_PRE_PING = True  # Verify connections before using
     CORS_HEADERS = 'Content-Type'
     
     # CORS Configuration
@@ -23,7 +48,16 @@ class Config:
 class DevelopmentConfig(Config):
     """Development configuration."""
     DEBUG = True
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///aura.db'
+    # Use in-memory database for development to avoid OneDrive locking issues
+    # DATABASE_URI can be overridden via environment variable
+    _db_uri = os.environ.get('DATABASE_URI')
+    if not _db_uri:
+        # Default to in-memory for development
+        SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory:'
+        print("[CONFIG] Using in-memory SQLite database for development")
+    else:
+        SQLALCHEMY_DATABASE_URI = _db_uri
+        print(f"[CONFIG] Using DATABASE_URI from environment: {_db_uri}")
     # Cho phép tất cả localhost origins trong development
     CORS_ALLOWED_ORIGINS = os.environ.get(
         'CORS_ALLOWED_ORIGINS', 

@@ -3,8 +3,13 @@ flask-cors
 gunicorn
 SQLAlchemy
 waitress
-
+psycopg2-binary
+flask-sqlalchemy
+python-dotenv
+PyJWT
+bcrypt
 pytest
+requests
 
 
 
